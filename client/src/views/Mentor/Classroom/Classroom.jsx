@@ -41,6 +41,7 @@ export default function Classroom({
             viewing={viewing}
           />
         </TabPane>
+
         <TabPane tab='Roster' key='roster'>
           <Roster handleLogout={handleLogout} classroomId={id} />
         </TabPane>
@@ -49,6 +50,19 @@ export default function Classroom({
             searchParams={searchParams}
             setSearchParams={setSearchParams}
             classroomId={id}
+          />
+        </TabPane>
+        // Brody
+        // --------
+        // Made a copy of the home tab, renamed it to gradebook. Looks like these tab components just swap to a given page
+        // The key shows up in the url, don't know what it does otherwise. Things don't break when I change it, but best to make it
+        // match the component name.
+        <TabPane tab='Gradebook' key='nothome'>
+          <Home
+            classroomId={parseInt(id)}
+            selectedActivity={selectedActivity}
+            setSelectedActivity={setSelectedActivity}
+            viewing={viewing}
           />
         </TabPane>
       </Tabs>
