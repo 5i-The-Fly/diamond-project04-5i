@@ -111,11 +111,13 @@ export default function TeacherGradebook( { classroomId } ) {
         <MentorSubHeader
           title={'Gradebook'}
         />
-        <Table
-        columns = {columns}
-        dataSource = {studentGrades}
-        pagination = {false} // idk what this does, breaks up table if too big?
-        />
+        <div id="table-container">
+          <Table
+          columns = {columns}
+          dataSource = {studentGrades}
+          pagination = {false} // idk what this does, breaks up table if too big?
+          />
+        </div>
       </div>
     );
 }
