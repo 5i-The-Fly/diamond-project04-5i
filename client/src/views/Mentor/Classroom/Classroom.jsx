@@ -58,8 +58,10 @@ export default function Classroom({
         // Made a copy of the home tab, renamed it to gradebook. Looks like these tab components just swap to a given page
         // The key shows up in the url, don't know what it does otherwise. Things don't break when I change it, but best to make it
         // match the component name.
-        <TabPane tab='Gradebook' key='nothome'>
-          <TeacherGradebook/>
+        <TabPane tab='Gradebook' key='teacherGradebook'>
+        <TeacherGradebook
+          classroomId={id}
+        />
         </TabPane>
       </Tabs>
     </div>

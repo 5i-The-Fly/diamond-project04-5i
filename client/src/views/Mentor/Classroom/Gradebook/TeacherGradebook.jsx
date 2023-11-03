@@ -7,6 +7,8 @@ import { Table, Button, Tag } from 'antd';
 import './TeacherGradebook.less';
 import { useSearchParam } from '../../../../../src/Utils/useSearchParam.jsx'; // added extra ../'s need a better fix
 import NavBar from '../../../../components/NavBar/NavBar';
+import { useSearchParams, useParams } from 'react-router-dom'
+
 
 import {
   getSessionsWithFilter,
@@ -14,11 +16,54 @@ import {
   getGrades,
   getUnit,
   getGrade,
+  getActivities,
   getClassroom,
 } from '../../../../../src/Utils/requests'; // same ../ change here, god.
 import Form from 'antd/lib/form/Form';
 
-const TeacherGradebook = () => {
+
+// creating a new component modeled after Roster.jsx
+export default function TeacherGradebook( { classroomId } ) {
+  const [classroom, setClassroom] = useState({});
+  const [activities, setActivities] = useState([]);
+
+
+  useEffect(() => {
+    getClassroom(classroomId).then((res) => {
+      if (res.data) {
+        const classroom = res.data;
+        setClassroom(classroom);
+      } else {
+        message.error(res.err);
+      }
+    });
+
+    }, [classroomId]);
+
+
+  return (
+    <div>
+      <h1>Classroom id: {classroomId}!</h1>
+      <h2>Students in the Classroom:</h2>
+      <ul>
+        {classroom.students &&
+          classroom.students.map((student, index) => (
+            <li key={index}>{student.name}</li>
+          ))}
+      </ul>
+    <h2>Activities in the Classroom:</h2>
+    <ul>
+      {activities &&
+        activities.map((activity, index) => (
+          <li key={index}>{activity.description}</li>
+        ))}
+    </ul>
+    </div>
+  );
+}
+
+/*
+const TeacherGradebook = ({}) => {
   const [sessions, setSessions] = useState([]);
   const [sessionCount, setSessionCount] = useState(0);
   const navigate = useNavigate();
@@ -470,3 +515,4 @@ const Filter = ({ setSearchParam, paramObj }) => {
 };
 
 export default TeacherGradebook;
+*/
