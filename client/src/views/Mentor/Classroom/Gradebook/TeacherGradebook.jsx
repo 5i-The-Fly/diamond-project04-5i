@@ -370,7 +370,7 @@ const Filter = ({ setSearchParam, paramObj }) => {
           <option key='empty' value=''>
             Select a grade
           </option>
-          {grades.map((grade) => (
+          {grades && grades.map((grade) => (
             <option key={grade.id} value={grade.id}>
               {grade.name}
             </option>
