@@ -4,6 +4,7 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Tag } from 'antd';
 import MentorSubHeader from '../../../../components/MentorSubHeader/MentorSubHeader';
+import './TeacherGradebook.less'
 
 import {
   getLessonModule,
@@ -88,6 +89,7 @@ export default function TeacherGradebook( { classroomId } ) {
         title: activity.number,
         dataIndex: ['grades', activity.number.toString()], // sets the cell value equal to the grade from studentGrades
         // cute little color tag based on the grade value
+        // i think 'grade' at this point is whatever text is currently being rendered?
         render: (grade) => (
           <Tag color={grade >= 70 ? 'green' : 'red'}>{grade}</Tag>
         ),
