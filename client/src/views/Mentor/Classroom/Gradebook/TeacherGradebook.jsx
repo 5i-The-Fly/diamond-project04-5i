@@ -38,6 +38,15 @@ export default function TeacherGradebook( { classroomId } ) {
       }
     });
 
+    getActivities().then((res) => {
+        if (res.data) {
+          const activities = res.data;
+          setActivities(activities);
+        } else {
+          message.error(res.err);
+        }
+      });
+  
     }, [classroomId]);
 
 
@@ -55,7 +64,7 @@ export default function TeacherGradebook( { classroomId } ) {
     <ul>
       {activities &&
         activities.map((activity, index) => (
-          <li key={index}>{activity.description}</li>
+          <li key={index}>{activity.number}</li>
         ))}
     </ul>
     </div>
@@ -415,7 +424,7 @@ const Filter = ({ setSearchParam, paramObj }) => {
           <option key='empty' value=''>
             Select a grade
           </option>
-          {grades && grades.map((grade) => (
+          {grades.map((grade) => (
             <option key={grade.id} value={grade.id}>
               {grade.name}
             </option>
