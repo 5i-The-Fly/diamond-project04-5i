@@ -86,7 +86,7 @@ export default function TeacherGradebook( { classroomId } ) {
       // subsequent columns for each activity
       ...activities.map((activity) => ({ // .map() constructs an array, ... unpacks it.
         key: activity.number,
-        title: activity.number,
+        title: 'Level ' + activity.number,
         dataIndex: ['grades', activity.number.toString()], // sets the cell value equal to the grade from studentGrades
         // cute little color tag based on the grade value
         // i think 'grade' at this point is whatever text is currently being rendered?
