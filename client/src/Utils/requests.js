@@ -146,6 +146,34 @@ export const getStudent = async (id) =>
     error: 'Student info could not be retrieved.',
   });
 
+// GET request for submission scores
+const getSubmissionScore = async (submissionId) => {
+  return makeRequest({
+    method: 'GET',
+    path: `/submissions/${submissionId}/score`,
+    auth: true
+  });
+};
+
+// POST request for submission scores
+const postSubmissionScore = async (submissionId, score) => {
+  return makeRequest({
+    method: 'POST',
+    path: `/submissions/${submissionId}/score`,
+    data: { score },
+    auth: true
+  });
+};
+
+// GET request for student overall scores
+const getStudentOverallScore = async (studentId, classroomId) => {
+  return makeRequest({
+    method: 'GET',
+    path: `/students/${studentId}/overall_score`,
+    auth: true
+  });
+};
+
 export const postJoin = async (code, ids) =>
   makeRequest({
     method: POST,

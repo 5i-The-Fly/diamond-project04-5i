@@ -60,7 +60,7 @@ export default function TeacherGradebook( { classroomId } ) {
     // It currently sets it equal to 90.
     // TODO: Since we have to actually get and save grades, we should probably change this to some actual database thing.
     // I don't know how to do that, so this works for now :D
-    const defaultGrade = 65;
+    const defaultGrade = 90;
     const studentGrades = students.map((student, index) => ({
       key: index, // TODO: figure out a better way to index students, use a student id if it exists.
       studentName: student.name,
