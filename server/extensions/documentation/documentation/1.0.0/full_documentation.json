@@ -14,7 +14,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "10/31/2023 5:09:27 PM"
+    "x-generation-date": "11/05/2023 6:08:19 PM"
   },
   "x-strapi-config": {
     "path": "/documentation",
@@ -12288,6 +12288,9 @@
                 "last_logged_in": {
                   "type": "string"
                 },
+                "overall_score": {
+                  "type": "number"
+                },
                 "created_by": {
                   "type": "string"
                 },
@@ -13208,6 +13211,9 @@
               "last_logged_in": {
                 "type": "string"
               },
+              "overall_score": {
+                "type": "number"
+              },
               "created_by": {
                 "type": "string"
               },
@@ -13685,6 +13691,9 @@
                 "last_logged_in": {
                   "type": "string"
                 },
+                "overall_score": {
+                  "type": "number"
+                },
                 "created_by": {
                   "type": "string"
                 },
@@ -13743,6 +13752,9 @@
                   "type": "string"
                 },
                 "job_id": {
+                  "type": "integer"
+                },
+                "score": {
                   "type": "integer"
                 },
                 "created_by": {
@@ -14074,6 +14086,9 @@
           "last_logged_in": {
             "type": "string",
             "format": "date-time"
+          },
+          "overall_score": {
+            "type": "number"
           }
         }
       },
@@ -14104,6 +14119,9 @@
           "last_logged_in": {
             "type": "string",
             "format": "date-time"
+          },
+          "overall_score": {
+            "type": "number"
           },
           "created_by": {
             "type": "string"
@@ -14257,6 +14275,9 @@
           },
           "job_id": {
             "type": "integer"
+          },
+          "score": {
+            "type": "integer"
           }
         }
       },
@@ -14305,6 +14326,9 @@
             "type": "string"
           },
           "job_id": {
+            "type": "integer"
+          },
+          "score": {
             "type": "integer"
           },
           "created_by": {

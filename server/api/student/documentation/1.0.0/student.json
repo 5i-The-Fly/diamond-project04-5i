@@ -784,6 +784,9 @@
           "last_logged_in": {
             "type": "string",
             "format": "date-time"
+          },
+          "overall_score": {
+            "type": "number"
           }
         }
       },
@@ -814,6 +817,9 @@
           "last_logged_in": {
             "type": "string",
             "format": "date-time"
+          },
+          "overall_score": {
+            "type": "number"
           },
           "created_by": {
             "type": "string"
