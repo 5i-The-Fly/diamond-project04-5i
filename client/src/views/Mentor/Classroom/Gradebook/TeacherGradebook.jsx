@@ -60,7 +60,7 @@ export default function TeacherGradebook( { classroomId } ) {
     // It currently sets it equal to 90.
     // TODO: Since we have to actually get and save grades, we should probably change this to some actual database thing.
     // I don't know how to do that, so this works for now :D
-    const defaultGrade = 90;
+    const defaultGrade = 65;
     const studentGrades = students.map((student, index) => ({
       key: index, // TODO: figure out a better way to index students, use a student id if it exists.
       studentName: student.name,
@@ -88,11 +88,26 @@ export default function TeacherGradebook( { classroomId } ) {
         key: activity.number,
         title: 'Level ' + activity.number,
         dataIndex: ['grades', activity.number.toString()], // sets the cell value equal to the grade from studentGrades
-        // cute little color tag based on the grade value
-        // i think 'grade' at this point is whatever text is currently being rendered?
-        render: (grade) => (
-          <Tag color={grade >= 70 ? 'green' : 'red'}>{grade}</Tag>
-        ),
+        // Cyrus: New grade color scheme
+        render: (grade) => {
+          let color;
+          if (grade >= 95) {
+            color = '#008000'; // Dark Green
+          } else if (grade >= 90 && grade < 95) {
+            color = '#32CD32'; // Lime Green
+          } else if (grade >= 80 && grade < 90) {
+            color = '#90EE90'; // Light Green
+          } else if (grade >= 70 && grade < 80) {
+            color = '#FFBF00'; // Amber
+          } else if (grade >= 60 && grade < 70) {
+            color = '#FFA500'; // Orange
+          } else {
+            color = 'red'; // Red for all other grades
+          }
+          return (
+            <Tag color={color}>{grade}</Tag>
+          );
+        },
       })),
     ];
 
