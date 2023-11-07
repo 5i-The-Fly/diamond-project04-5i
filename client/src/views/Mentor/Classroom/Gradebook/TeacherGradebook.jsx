@@ -2,7 +2,7 @@
 // - Brody
 
 import React, { useEffect, useState } from 'react';
-import { Table, Tag } from 'antd';
+import { Table, Tag, Input, message } from 'antd';
 import MentorSubHeader from '../../../../components/MentorSubHeader/MentorSubHeader';
 import './TeacherGradebook.less'
 
@@ -56,22 +56,22 @@ export default function TeacherGradebook( { classroomId } ) {
     }, [classroomId]);
 
 
-    // This snippet determines the grade for each assignment for every student.
+    // This snippet determines the score for each assignment for every student.
     // It currently sets it equal to 90.
-    // TODO: Since we have to actually get and save grades, we should probably change this to some actual database thing.
+    // TODO: Since we have to actually get and save scores, we should probably change this to some actual database thing.
     // I don't know how to do that, so this works for now :D
-    const defaultGrade = 90;
-    const studentGrades = students.map((student, index) => ({
+    const defaultScore = 90;
+    const studentScores = students.map((student, index) => ({
       key: index, // TODO: figure out a better way to index students, use a student id if it exists.
       studentName: student.name,
-      // this bit sets grades to be key value pairs, mapping an activity to an integer
-      grades: activities.reduce((acc, activity) => {
-        acc[activity.number] = defaultGrade;
+      // this bit sets scores to be key value pairs, mapping an activity to an integer
+      scores: activities.reduce((acc, activity) => {
+        acc[activity.number] = defaultScore;
         return acc;
       }, {}),
     }));
 
-    // So studentGrades is a list of [int, string, grades] objects, and grades
+    // So studentScores is a list of [int, string, scores] objects, and scores
     // is another list of [activity, int] pairs
 
     
@@ -87,25 +87,25 @@ export default function TeacherGradebook( { classroomId } ) {
       ...activities.map((activity) => ({ // .map() constructs an array, ... unpacks it.
         key: activity.number,
         title: 'Level ' + activity.number,
-        dataIndex: ['grades', activity.number.toString()], // sets the cell value equal to the grade from studentGrades
-        // Cyrus: New grade color scheme
-        render: (grade) => {
+        dataIndex: ['scores', activity.number.toString()], // sets the cell value equal to the score from studentScores
+        // Cyrus: New score color scheme
+        render: (score) => {
           let color;
-          if (grade >= 95) {
+          if (score >= 95) {
             color = '#008000'; // Dark Green
-          } else if (grade >= 90 && grade < 95) {
+          } else if (score >= 90 && score < 95) {
             color = '#32CD32'; // Lime Green
-          } else if (grade >= 80 && grade < 90) {
+          } else if (score >= 80 && score < 90) {
             color = '#90EE90'; // Light Green
-          } else if (grade >= 70 && grade < 80) {
+          } else if (score >= 70 && score < 80) {
             color = '#FFBF00'; // Amber
-          } else if (grade >= 60 && grade < 70) {
+          } else if (score >= 60 && score < 70) {
             color = '#FFA500'; // Orange
           } else {
-            color = 'red'; // Red for all other grades
+            color = 'red'; // Red for all other scores
           }
           return (
-            <Tag color={color}>{grade}</Tag>
+            <Tag color={color}>{score}</Tag>
           );
         },
       })),
@@ -129,7 +129,7 @@ export default function TeacherGradebook( { classroomId } ) {
         <div id="table-container">
           <Table
           columns = {columns}
-          dataSource = {studentGrades}
+          dataSource = {studentScores}
           pagination = {false} // idk what this does, breaks up table if too big?
           />
         </div>
