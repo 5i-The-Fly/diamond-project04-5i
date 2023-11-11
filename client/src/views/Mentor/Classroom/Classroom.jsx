@@ -63,6 +63,11 @@ export default function Classroom({
           classroomId={id}
         />
         </TabPane>
+        <TabPane tab='Submissions' key='submissions'>
+        <TeacherGradebook
+          classroomId={id}
+        />
+        </TabPane>
       </Tabs>
     </div>
   );
