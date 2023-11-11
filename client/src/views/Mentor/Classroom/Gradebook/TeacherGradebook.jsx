@@ -56,6 +56,50 @@ export default function TeacherGradebook( { classroomId } ) {
     }, [classroomId]);
 
 
+    const handleScoreChange = (e, key, dataIndex) => {
+      const newScore = parseInt(e.target.value, 10); // TODO: This is a bit sketchy, but it works for testing for now.
+      const newStudents = [...students];
+      const studentIndex = newStudents.findIndex((student) => student.key === key);
+      newStudents[studentIndex].grades[dataIndex] = newScore;
+      setStudents(newStudents);
+    };
+
+
+    // This is the input cell that handles changing the grade.
+    // This will likely need refining, but it is built for quick testing.
+    {/*
+    const EditableCell = ({
+      editing,
+      dataIndex,
+      title,
+      inputType,
+      record,
+      index,
+      children,
+      ...restProps
+    }) => {
+    
+      return (
+        <td {...restProps}>
+          {editing ? (
+            <Form.Item
+              style = {{ margin: 0 }}
+              initialValue = {children[1]?.props?.children || '-'} 
+            >
+              
+              
+            </Form.Item>
+          ) : (
+            children
+          )}
+        </td>
+      );
+    };
+  */}
+    
+
+
+
     // This snippet determines the score for each assignment for every student.
     // It currently sets it equal to 90.
     // TODO: Since we have to actually get and save scores, we should probably change this to some actual database thing.
@@ -89,7 +133,7 @@ export default function TeacherGradebook( { classroomId } ) {
         title: 'Level ' + activity.number,
         dataIndex: ['scores', activity.number.toString()], // sets the cell value equal to the score from studentScores
         // Cyrus: New score color scheme
-        render: (score) => {
+        render: (score, record) => {
           let color;
           if (score >= 95) {
             color = '#008000'; // Dark Green
@@ -105,17 +149,22 @@ export default function TeacherGradebook( { classroomId } ) {
             color = 'red'; // Red for all other scores
           }
           return (
-            <Tag color={color}>{score}</Tag>
+            <Input
+              defaultValue={score === 90 ? '-' : score} // Need to replace 90 with default grade logic
+              // onPressEnter={(e) => saveScore(record.key, activity.number)} // need to define saveScore
+              onChange={(e) => handleScoreChange(record.key, activity.number, e.target.value)}
+            />
           );
         },
       })),
     ];
-
+    
 
     // for the back button!
     const handleBack = () => {
       navigate('/dashboard');
     };
+
 
 
     return (
