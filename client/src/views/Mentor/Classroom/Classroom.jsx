@@ -6,6 +6,7 @@ import NavBar from '../../../components/NavBar/NavBar';
 import Roster from './Roster/Roster';
 import Home from './Home/Home';
 import TeacherGradebook from './Gradebook/TeacherGradebook'; // Brody : Not sure if 'TeacherGradebook' is the best name...
+import TeacherSubmission from './Submissions/TeacherSubmission';
 import SavedWorkSpaceTab from '../../../components/Tabs/SavedWorkspaceTab';
 import { useSearchParams, useParams } from 'react-router-dom';
 
@@ -59,12 +60,12 @@ export default function Classroom({
         // The key shows up in the url, don't know what it does otherwise. Things don't break when I change it, but best to make it
         // match the component name.
         <TabPane tab='Gradebook' key='teacherGradebook'>
-        <TeacherGradebook
+          <TeacherGradebook
           classroomId={id}
         />
         </TabPane>
         <TabPane tab='Submissions' key='submissions'>
-        <TeacherGradebook
+          <TeacherSubmission
           classroomId={id}
         />
         </TabPane>
