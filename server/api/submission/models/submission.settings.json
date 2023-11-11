@@ -58,6 +58,10 @@
     },
     "score": {
       "type": "integer"
+    },
+    "scored_rubric": {
+      "via": "submission",
+      "model": "scored-rubric"
     }
   }
 }

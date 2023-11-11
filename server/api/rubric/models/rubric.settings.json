@@ -1,0 +1,44 @@
+{
+  "kind": "collectionType",
+  "collectionName": "rubrics",
+  "info": {
+    "name": "TemplateRubric",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "richtext"
+    },
+    "criteria": {
+      "type": "json"
+    },
+    "activity": {
+      "model": "activity",
+      "via": "rubric"
+    },
+    "total_score": {
+      "type": "decimal"
+    },
+    "templateRubric_id": {
+      "type": "uid"
+    },
+    "creation_date": {
+      "type": "datetime"
+    },
+    "last_modified": {
+      "type": "datetime"
+    },
+    "scored_rubric": {
+      "via": "template_rubric",
+      "model": "scored-rubric"
+    }
+  }
+}
