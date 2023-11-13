@@ -662,9 +662,6 @@
           "job_id": {
             "type": "integer"
           },
-          "score": {
-            "type": "integer"
-          },
           "scored_rubric": {
             "required": [
               "id"
@@ -749,9 +746,6 @@
             "type": "string"
           },
           "job_id": {
-            "type": "integer"
-          },
-          "score": {
             "type": "integer"
           },
           "scored_rubric": {

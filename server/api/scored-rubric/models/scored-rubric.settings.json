@@ -16,8 +16,8 @@
       "model": "rubric"
     },
     "submission": {
-      "model": "submission",
-      "via": "scored_rubric"
+      "via": "scored_rubric",
+      "model": "submission"
     },
     "score_details": {
       "type": "json"

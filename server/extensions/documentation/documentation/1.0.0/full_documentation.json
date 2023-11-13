@@ -14,7 +14,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "11/11/2023 8:43:17 PM"
+    "x-generation-date": "11/11/2023 9:33:26 PM"
   },
   "x-strapi-config": {
     "path": "/documentation",
@@ -14823,9 +14823,6 @@
               "job_id": {
                 "type": "integer"
               },
-              "score": {
-                "type": "integer"
-              },
               "scored_rubric": {
                 "type": "string"
               },
@@ -15188,9 +15185,6 @@
                   "type": "string"
                 },
                 "job_id": {
-                  "type": "integer"
-                },
-                "score": {
                   "type": "integer"
                 },
                 "scored_rubric": {
@@ -15718,9 +15712,6 @@
           "job_id": {
             "type": "integer"
           },
-          "score": {
-            "type": "integer"
-          },
           "scored_rubric": {
             "required": [
               "id"
@@ -15805,9 +15796,6 @@
             "type": "string"
           },
           "job_id": {
-            "type": "integer"
-          },
-          "score": {
             "type": "integer"
           },
           "scored_rubric": {

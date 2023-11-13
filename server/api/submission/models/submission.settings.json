@@ -56,9 +56,6 @@
     "job_id": {
       "type": "biginteger"
     },
-    "score": {
-      "type": "integer"
-    },
     "scored_rubric": {
       "via": "submission",
       "model": "scored-rubric"
