@@ -56,6 +56,7 @@ export default function TeacherGradebook( { classroomId } ) {
     }, [classroomId]);
 
 
+    // Cyrus: Need to update handleScoreChange to actually save score to database when updated.
     const handleScoreChange = (e, key, dataIndex) => {
       const newScore = parseInt(e.target.value, 10); // TODO: This is a bit sketchy, but it works for testing for now.
       const newStudents = [...students];
@@ -65,7 +66,7 @@ export default function TeacherGradebook( { classroomId } ) {
     };
 
 
-    // This is the input cell that handles changing the grade.
+    // Cyrus: This is the input cell that handles changing the grade.
     // This will likely need refining, but it is built for quick testing.
     {/*
     const EditableCell = ({
@@ -148,6 +149,7 @@ export default function TeacherGradebook( { classroomId } ) {
           } else {
             color = 'red'; // Red for all other scores
           }
+          // Cyrus: input cell for changing the score
           return (
             <Input
               defaultValue={score === 90 ? '-' : score} // Need to replace 90 with default grade logic
