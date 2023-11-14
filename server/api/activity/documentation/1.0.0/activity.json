@@ -898,29 +898,20 @@
               "title": {
                 "type": "string"
               },
-              "description": {
+              "activity": {
                 "type": "string"
               },
               "criteria": {
                 "type": "object"
               },
-              "activity": {
-                "type": "string"
-              },
               "total_score": {
                 "type": "number"
               },
-              "templateRubric_id": {
-                "type": "uid"
-              },
-              "creation_date": {
-                "type": "string"
-              },
-              "last_modified": {
-                "type": "string"
-              },
-              "scored_rubric": {
-                "type": "string"
+              "scored_rubrics": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
               },
               "published_at": {
                 "type": "string"

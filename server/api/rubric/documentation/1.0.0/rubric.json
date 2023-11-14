@@ -525,12 +525,6 @@
           "title": {
             "type": "string"
           },
-          "description": {
-            "type": "string"
-          },
-          "criteria": {
-            "type": "object"
-          },
           "activity": {
             "required": [
               "id",
@@ -588,54 +582,43 @@
               }
             }
           },
+          "criteria": {
+            "type": "object"
+          },
           "total_score": {
             "type": "number"
           },
-          "templateRubric_id": {
-            "type": "uid"
-          },
-          "creation_date": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "last_modified": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "scored_rubric": {
-            "required": [
-              "id"
-            ],
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "template_rubric": {
-                "type": "string"
-              },
-              "submission": {
-                "type": "string"
-              },
-              "score_details": {
-                "type": "object"
-              },
-              "total_score": {
-                "type": "number"
-              },
-              "evaluator_comments": {
-                "type": "string"
-              },
-              "evaluationDate": {
-                "type": "string"
-              },
-              "published_at": {
-                "type": "string"
-              },
-              "created_by": {
-                "type": "string"
-              },
-              "updated_by": {
-                "type": "string"
+          "scored_rubrics": {
+            "type": "array",
+            "items": {
+              "required": [
+                "id"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "submission": {
+                  "type": "string"
+                },
+                "score_details": {
+                  "type": "object"
+                },
+                "total_score": {
+                  "type": "number"
+                },
+                "template_rubric": {
+                  "type": "string"
+                },
+                "published_at": {
+                  "type": "string"
+                },
+                "created_by": {
+                  "type": "string"
+                },
+                "updated_by": {
+                  "type": "string"
+                }
               }
             }
           },
@@ -650,31 +633,20 @@
           "title": {
             "type": "string"
           },
-          "description": {
+          "activity": {
             "type": "string"
           },
           "criteria": {
             "type": "object"
           },
-          "activity": {
-            "type": "string"
-          },
           "total_score": {
             "type": "number"
           },
-          "templateRubric_id": {
-            "type": "uid"
-          },
-          "creation_date": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "last_modified": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "scored_rubric": {
-            "type": "string"
+          "scored_rubrics": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "published_at": {
             "type": "string",
