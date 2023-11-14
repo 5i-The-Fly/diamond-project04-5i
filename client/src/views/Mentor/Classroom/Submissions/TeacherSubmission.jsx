@@ -3,6 +3,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Table, Tag, Input, message } from 'antd';
+import './TeacherSubmission.less'
 
 
 import {
@@ -51,11 +52,17 @@ export default function TeacherGradebook( { classroomId } ) {
 
     return (
       <div>
+
+      
         <button id='home-back-btn' onClick={handleBack}>
           <i className='fa fa-arrow-left' aria-hidden='true' />
         </button>
       
-        
+        <div className="submission-menu">
+        <div className="section section1">Section 1</div>
+        <div className="section section2">Section 2</div>
+        <div className="section section3">Section 3</div>
+      </div> 
       </div>
     );
 }
