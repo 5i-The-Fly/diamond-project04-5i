@@ -123,37 +123,6 @@ export default function TeacherGradebook( { classroomId } ) {
     };
 
 
-    // Cyrus: This is the input cell that handles changing the grade.
-    // This will likely need refining, but it is built for quick testing.
-    {/*
-    const EditableCell = ({
-      editing,
-      dataIndex,
-      title,
-      inputType,
-      record,
-      index,
-      children,
-      ...restProps
-    }) => {
-    
-      return (
-        <td {...restProps}>
-          {editing ? (
-            <Form.Item
-              style = {{ margin: 0 }}
-              initialValue = {children[1]?.props?.children || '-'} 
-            >
-              
-              
-            </Form.Item>
-          ) : (
-            children
-          )}
-        </td>
-      );
-    };
-  */}
     
 
 
