@@ -151,6 +151,7 @@ export default function TeacherGradebook( { classroomId } ) {
       {
         // first column for the student name
         title: 'Student',
+        dataIndex: 'studentName',
         key: 'studentName'
       },
       // subsequent columns for each activity
