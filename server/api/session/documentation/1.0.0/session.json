@@ -676,8 +676,8 @@
                 "job_id": {
                   "type": "integer"
                 },
-                "score": {
-                  "type": "integer"
+                "scored_rubric": {
+                  "type": "string"
                 },
                 "created_by": {
                   "type": "string"

@@ -46,6 +46,10 @@
     "activity_template": {
       "type": "text",
       "required": false
+    },
+    "rubric": {
+      "via": "activity",
+      "model": "rubric"
     }
   }
 }

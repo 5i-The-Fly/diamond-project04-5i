@@ -1,6 +1,31 @@
-// This is NO LONGER acrude copy of ActivityLevelReport.jsx from the researcher view. I KIND OF know what I'm doing 
-// - Brody
+// Gradebook view for teachers.
+// ---------------------------------------------------------------------------------------------------------
+// Primary component is a table where each cell represents a collection of submissions, with one of them being the 'active' submission.
+// For now, this will be the first submission in the array.
 
+// An individual submission has a scored rubric which contains the final score.
+// In the frontend, students are rows and activites are columns.
+
+// Cells are buttons with a display score.
+// Display score is taken from the active submission (first in submission array for now)
+// Button sends to the submission tab. Later, it can set the 'current' paramater of the submission tab.
+
+// ---------------------------------------------------------------------------------------------------------
+// TODO:
+// [x] Get submission from student + activity
+//    [x] Get all submissions for the classroom (classroom->submissions->sessions)
+//    [x] Build map
+//        - Key: Student, activity
+//        - Value: Submission[]
+// [ ] Display score
+//    [ ] Default value ()
+//    [ ] If submission doesn't exist, display '-'
+// [ ] Button component
+//    [ ] Color based on display score
+//    [ ] Send to submission tab
+//    [ ] Send to specific submissions
+// [ ] Totals/average row/column
+// ---------------------------------------------------------------------------------------------------------
 import React, { useEffect, useState } from 'react';
 import { Table, Tag, Input, message } from 'antd';
 import MentorSubHeader from '../../../../components/MentorSubHeader/MentorSubHeader';
@@ -10,38 +35,44 @@ import {
   getLessonModule,
   getLessonModuleActivities,
   getClassroom,
-} from '../../../../../src/Utils/requests'; // TODO: so many ../ 
+} from '../../../../../src/Utils/requests';
 
 
-
-// creating a new component modeled after Roster.jsx
 export default function TeacherGradebook( { classroomId } ) {
-  // these are the state variables we need access to
-  const [classroom, setClassroom] = useState({});
-  const [activities, setActivities] = useState([]); // this is an array, so we do the [] thing
+  // These are the state variables we need access to. Each are arrays, so [] is put inside useState().
+  const [activities, setActivities] = useState([]); 
   const [students, setStudents] = useState([]);
-  const [activeLessonModule, setActiveLessonModule] = useState(null); // TODO: not sure if this is needed beyond getting activities, could be const?
+  const [submissionsMap, setSubmissionsMap] = useState([]); // Maps a student and activity pair to an array of submissions. One submission can appear multiple times.
 
+  // Not sure if these are needed, but they were states in the component this was copied from (Home.jsx)
+  //const [classroom, setClassroom] = useState({});
+  //const [activeLessonModule, setActiveLessonModule] = useState(null);
 
-  // useEffect will get us all our necessary state variables methinks
+  
+
+  // useEffect will get us all our necessary state variables methinks.
+  // TODO: Is this called every time data is updated? Worried about speed if we're remaking the table every time.
   useEffect(() => {
-    // get the classroom from our input id
+    // =Get the classroom from our input id
     getClassroom(classroomId).then((res) => {
-      if (res.data) {
+      if (!res.data) {
+        message.error(res.err);
+        return
+      }
+        // These are not needed beyond getting our other states, so they can be constant inside useEffect.
         const classroom = res.data;
-        setClassroom(classroom);
-        // students is grabbed too
+        const sessions = classroom.sessions
+        //setClassroom(classroom);
+
+        // Get Students
         setStudents(classroom.students);
-        // get list of assignments (taken from Home.jsx's approach)
+
+        
+        // Get Activities (taken from Home.jsx's approach)
         classroom.selections.forEach(async (selection) => {
           if (selection.current) {
-            const lsRes = await getLessonModule(
-              selection.lesson_module
-            );
-            if (lsRes.data) setActiveLessonModule(lsRes.data);
-            else {
-              message.error(lsRes.err);
-            }
+            const lsRes = await getLessonModule(selection.lesson_module);
+            if (!lsRes.data) message.error(lsRes.err); 
             const activityRes = await getLessonModuleActivities(lsRes.data.id);
             if (activityRes) setActivities(activityRes.data);
             else {
@@ -49,53 +80,49 @@ export default function TeacherGradebook( { classroomId } ) {
             }
           }
         });
-      } else {
-        message.error(res.err);
-      }
+
+        // Create submissions map, assigning each student/activity pair to an array of submissions
+        let tempSubmissionsMap 
+        students.forEach(async (student) => {
+          activities.forEach(async (activity) => {
+            tempSubmissionsMap.set([student, activity], []) // initialize to empty
+          });
+        });
+
+        // Loop through every session, loop through every submission in the session. Loop through every student in submission!
+        // Push submission on to map.
+        classroom.sessions.forEach(async (session) => {
+          session.submissions.forEach(async (submission) => {
+            session.students.forEach(async (student) => {
+              tempSubmissionsMap.get([student, submission.activity]).push(submission)
+
+            });
+          });
+        });
+        // Finally!
+        setSubmissionsMap(tempSubmissionsMap)
+
     });
     }, [classroomId]);
 
 
-    const handleScoreChange = (e, key, dataIndex) => {
-      const newScore = parseInt(e.target.value, 10); // TODO: This is a bit sketchy, but it works for testing for now.
+    // Cyrus: Need to update handleScoreChange to actually save score to database when updated.
+    const handleScoreChange = (e, studentIndex, activityNumber) => {
+      const newScore = parseInt(e.target.value, 10);
+      const studentName = students[studentIndex].name;
+
+      // Log the information to ensure input box corresponds to correct student and activity
+      console.log('Score: ' + newScore + ', Student: ' + studentName + ', Activity: ' + activityNumber);
+      
       const newStudents = [...students];
-      const studentIndex = newStudents.findIndex((student) => student.key === key);
-      newStudents[studentIndex].grades[dataIndex] = newScore;
+      // const studentIndex = newStudents.findIndex((student) => student.key === key);
+      newStudents[studentIndex].grades[activityNumber] = newScore;
       setStudents(newStudents);
+
+      // TODO: Cyrus: updates to backend needed here
     };
 
 
-    // This is the input cell that handles changing the grade.
-    // This will likely need refining, but it is built for quick testing.
-    {/*
-    const EditableCell = ({
-      editing,
-      dataIndex,
-      title,
-      inputType,
-      record,
-      index,
-      children,
-      ...restProps
-    }) => {
-    
-      return (
-        <td {...restProps}>
-          {editing ? (
-            <Form.Item
-              style = {{ margin: 0 }}
-              initialValue = {children[1]?.props?.children || '-'} 
-            >
-              
-              
-            </Form.Item>
-          ) : (
-            children
-          )}
-        </td>
-      );
-    };
-  */}
     
 
 
@@ -124,7 +151,6 @@ export default function TeacherGradebook( { classroomId } ) {
       {
         // first column for the student name
         title: 'Student',
-        dataIndex: 'studentName',
         key: 'studentName'
       },
       // subsequent columns for each activity
@@ -148,11 +174,13 @@ export default function TeacherGradebook( { classroomId } ) {
           } else {
             color = 'red'; // Red for all other scores
           }
+          // Cyrus: input cell for changing the score
           return (
             <Input
               defaultValue={score === 90 ? '-' : score} // Need to replace 90 with default grade logic
               // onPressEnter={(e) => saveScore(record.key, activity.number)} // need to define saveScore
-              onChange={(e) => handleScoreChange(record.key, activity.number, e.target.value)}
+              onBlur={(e) => handleScoreChange(e, record.key, activity.number)} // handle on blur
+              onPressEnter={(e) => handleScoreChange(e, record.key, activity.number)} // handle on press enter
             />
           );
         },

@@ -1,6 +1,6 @@
 {
   "paths": {
-    "/submissions": {
+    "/rubrics": {
       "get": {
         "deprecated": false,
         "description": "",
@@ -12,7 +12,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Submission"
+                    "$ref": "#/components/schemas/Rubric"
                   }
                 }
               }
@@ -51,7 +51,7 @@
         },
         "summary": "",
         "tags": [
-          "Submission"
+          "Rubric"
         ],
         "parameters": [
           {
@@ -201,7 +201,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Submission"
+                  "$ref": "#/components/schemas/Rubric"
                 }
               }
             }
@@ -239,7 +239,7 @@
         },
         "summary": "",
         "tags": [
-          "Submission"
+          "Rubric"
         ],
         "requestBody": {
           "description": "",
@@ -247,14 +247,14 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NewSubmission"
+                "$ref": "#/components/schemas/NewRubric"
               }
             }
           }
         }
       }
     },
-    "/submissions/count": {
+    "/rubrics/count": {
       "get": {
         "deprecated": false,
         "description": "",
@@ -306,12 +306,12 @@
         },
         "summary": "",
         "tags": [
-          "Submission"
+          "Rubric"
         ],
         "parameters": []
       }
     },
-    "/submissions/{id}": {
+    "/rubrics/{id}": {
       "get": {
         "deprecated": false,
         "description": "",
@@ -321,7 +321,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Submission"
+                  "$ref": "#/components/schemas/Rubric"
                 }
               }
             }
@@ -359,7 +359,7 @@
         },
         "summary": "",
         "tags": [
-          "Submission"
+          "Rubric"
         ],
         "parameters": [
           {
@@ -383,7 +383,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Submission"
+                  "$ref": "#/components/schemas/Rubric"
                 }
               }
             }
@@ -421,7 +421,7 @@
         },
         "summary": "",
         "tags": [
-          "Submission"
+          "Rubric"
         ],
         "requestBody": {
           "description": "",
@@ -429,7 +429,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NewSubmission"
+                "$ref": "#/components/schemas/NewRubric"
               }
             }
           }
@@ -495,7 +495,7 @@
         },
         "summary": "",
         "tags": [
-          "Submission"
+          "Rubric"
         ],
         "parameters": [
           {
@@ -514,93 +514,22 @@
   },
   "components": {
     "schemas": {
-      "Submission": {
+      "Rubric": {
         "required": [
-          "id",
-          "status",
-          "workspace",
-          "board",
-          "sketch",
-          "sandbox"
+          "id"
         ],
         "properties": {
           "id": {
             "type": "string"
           },
-          "status": {
-            "type": "string",
-            "default": "WAITING"
-          },
-          "workspace": {
+          "title": {
             "type": "string"
           },
-          "success": {
-            "type": "boolean"
-          },
-          "hex": {
+          "description": {
             "type": "string"
           },
-          "stdout": {
-            "type": "string"
-          },
-          "stderr": {
-            "type": "string"
-          },
-          "board": {
-            "type": "string"
-          },
-          "sketch": {
-            "type": "string"
-          },
-          "sandbox": {
-            "type": "boolean",
-            "default": false
-          },
-          "session": {
-            "required": [
-              "id"
-            ],
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "classroom": {
-                "type": "string"
-              },
-              "students": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "submissions": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "saves": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "unit": {
-                "type": "string"
-              },
-              "grade": {
-                "type": "string"
-              },
-              "lesson_module": {
-                "type": "string"
-              },
-              "created_by": {
-                "type": "string"
-              },
-              "updated_by": {
-                "type": "string"
-              }
-            }
+          "criteria": {
+            "type": "object"
           },
           "activity": {
             "required": [
@@ -659,8 +588,19 @@
               }
             }
           },
-          "job_id": {
-            "type": "integer"
+          "total_score": {
+            "type": "number"
+          },
+          "templateRubric_id": {
+            "type": "uid"
+          },
+          "creation_date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "last_modified": {
+            "type": "string",
+            "format": "date-time"
           },
           "scored_rubric": {
             "required": [
@@ -698,58 +638,47 @@
                 "type": "string"
               }
             }
+          },
+          "published_at": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
-      "NewSubmission": {
-        "required": [
-          "status",
-          "workspace",
-          "board",
-          "sketch",
-          "sandbox"
-        ],
+      "NewRubric": {
         "properties": {
-          "status": {
-            "type": "string",
-            "default": "WAITING"
-          },
-          "workspace": {
+          "title": {
             "type": "string"
           },
-          "success": {
-            "type": "boolean"
-          },
-          "hex": {
+          "description": {
             "type": "string"
           },
-          "stdout": {
-            "type": "string"
-          },
-          "stderr": {
-            "type": "string"
-          },
-          "board": {
-            "type": "string"
-          },
-          "sketch": {
-            "type": "string"
-          },
-          "sandbox": {
-            "type": "boolean",
-            "default": false
-          },
-          "session": {
-            "type": "string"
+          "criteria": {
+            "type": "object"
           },
           "activity": {
             "type": "string"
           },
-          "job_id": {
-            "type": "integer"
+          "total_score": {
+            "type": "number"
+          },
+          "templateRubric_id": {
+            "type": "uid"
+          },
+          "creation_date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "last_modified": {
+            "type": "string",
+            "format": "date-time"
           },
           "scored_rubric": {
             "type": "string"
+          },
+          "published_at": {
+            "type": "string",
+            "format": "date-time"
           },
           "created_by": {
             "type": "string"
@@ -763,7 +692,7 @@
   },
   "tags": [
     {
-      "name": "Submission"
+      "name": "Rubric"
     }
   ]
 }
