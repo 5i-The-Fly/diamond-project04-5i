@@ -57,12 +57,19 @@ export default function TeacherGradebook( { classroomId } ) {
 
 
     // Cyrus: Need to update handleScoreChange to actually save score to database when updated.
-    const handleScoreChange = (e, key, dataIndex) => {
-      const newScore = parseInt(e.target.value, 10); // TODO: This is a bit sketchy, but it works for testing for now.
+    const handleScoreChange = (e, studentIndex, activityNumber) => {
+      const newScore = parseInt(e.target.value, 10);
+      const studentName = students[studentIndex].name;
+
+      // Log the information to ensure input box corresponds to correct student and activity
+      console.log('Score: ' + newScore + ', Student: ' + studentName + ', Activity: ' + activityNumber);
+      
       const newStudents = [...students];
-      const studentIndex = newStudents.findIndex((student) => student.key === key);
-      newStudents[studentIndex].grades[dataIndex] = newScore;
+      // const studentIndex = newStudents.findIndex((student) => student.key === key);
+      newStudents[studentIndex].grades[activityNumber] = newScore;
       setStudents(newStudents);
+
+      // TODO: Cyrus: updates to backend needed here
     };
 
 
@@ -125,7 +132,6 @@ export default function TeacherGradebook( { classroomId } ) {
       {
         // first column for the student name
         title: 'Student',
-        dataIndex: 'studentName',
         key: 'studentName'
       },
       // subsequent columns for each activity
@@ -154,7 +160,8 @@ export default function TeacherGradebook( { classroomId } ) {
             <Input
               defaultValue={score === 90 ? '-' : score} // Need to replace 90 with default grade logic
               // onPressEnter={(e) => saveScore(record.key, activity.number)} // need to define saveScore
-              onChange={(e) => handleScoreChange(record.key, activity.number, e.target.value)}
+              onBlur={(e) => handleScoreChange(e, record.key, activity.number)} // handle on blur
+              onPressEnter={(e) => handleScoreChange(e, record.key, activity.number)} // handle on press enter
             />
           );
         },
