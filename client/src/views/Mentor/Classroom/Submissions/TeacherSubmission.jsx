@@ -11,7 +11,7 @@ import {
   getLessonModuleActivities,
   getClassroom,
   getSession,
-} from '../../../../../src/Utils/requests'; // TODO: so many ../ 
+} from '../../../../../src/Utils/requests'; // TODO: so many ../
 
 
 
@@ -48,7 +48,7 @@ export default function TeacherGradebook( { classroomId } ) {
       navigate('/dashboard');
     };
 
-    // for the button of "Add Feedback"
+    // for the button of "Add Feedback" so teacher can add the
     const AddFeedback = () =>{
 
     }
