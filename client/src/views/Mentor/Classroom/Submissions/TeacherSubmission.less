@@ -1,10 +1,3 @@
-// This is also ripped from ActivityLevelReport under researcher. I don't even know what a .less file is.
-// - Brody
-
-// Currently this doesn't work as the server doesn't grant access to the grades variable.
-// Upon opening the Gradebook tab, the page crashes and the console shows a 403, so the
-// request to get grades (and likely all subsequent variables) is received but declined.
-// I don't know how to fix this :D
 
 @import '../../../../assets/style.less'; // added more ../, must be a better way!
 
@@ -12,6 +5,7 @@
 @lightBlue: #62aadb;
 @barHeight: 50px;
 @sectionWidth: 30%;
+@containerWidth: 90%;
 
 // Styles for the bar box
 .submission-menu {
@@ -23,6 +17,37 @@
   border-radius: 25px; // Apply border-radius for curved sides
   overflow: hidden;
   padding: 0 20px; // Add padding to create buffer space on both sides
+}
+
+.Student-submission{
+  background-color: #FFFFFF;
+  display: flex; //  It makes the element a flex container, enabling you to use flex properties on its children
+  justify-content: space-between; // the items are evenly distributed
+  align-items: center; 
+  height: 20cm; // Set the height to 10cm
+  width: @containerWidth;
+  overflow: hidden;
+  padding: 0 20px; // Add padding to create buffer space on both sides
+  margin: auto; /* Add this line to center the container horizontally */
+}
+
+.top-bar {
+  background-color: #D3D3D3; /* Set the background color of the top bar */
+  display: flex; //  It makes the element a flex container, enabling you to use flex properties on its children
+  justify-content: space-between; // the items are evenly distributed
+  align-items: center; 
+  flex-direction: column; /* Stack children vertically */
+  height: 2cm; /* Set the height of the top bar */
+  width: @containerWidth;
+  // border-radius: 15px 15px 0 0; /* Apply border-radius for curved top corners */
+  margin: auto; /* Add this line to center the container horizontally */
+}
+
+.AddFeedback {
+  /* Add styles for the button */
+  background-color: #111111;
+  color: #454545;
+  
 }
 
 // Styles for the sections within the bar box
@@ -45,4 +70,9 @@
 // Applying styles to individual sections
 .section1, .section2, .section3 {
   .section;
+}
+
+// Applying the styles to buttion name in top-bar
+.AddFeedback, .Grades{
+  .top-bar;
 }

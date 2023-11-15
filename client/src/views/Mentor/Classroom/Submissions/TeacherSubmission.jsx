@@ -48,21 +48,39 @@ export default function TeacherGradebook( { classroomId } ) {
       navigate('/dashboard');
     };
 
+    // for the button of "Add Feedback"
+    const AddFeedback = () =>{
+
+    }
+
 
 
     return (
       <div>
-
-      
+        
         <button id='home-back-btn' onClick={handleBack}>
           <i className='fa fa-arrow-left' aria-hidden='true' />
         </button>
-      
+        
         <div className="submission-menu">
         <div className="section section1">Section 1</div>
         <div className="section section2">Section 2</div>
         <div className="section section3">Section 3</div>
       </div> 
+      
+      
+      <div className="top-bar" style={{ marginTop: '200px'}}>
+        <button> 
+          <div className="top-bar AddFeedback">Add Feedback</div>
+        </button>
+
+        <button onClick={AddFeedback}> 
+          <div className="top-bar Grade">Grades</div>
+        </button>
+      </div>
+      
+      <div className="Student-submission" style={{ marginTop: '20px', marginBottom: '50px' }}></div>
+      
       </div>
     );
 }
