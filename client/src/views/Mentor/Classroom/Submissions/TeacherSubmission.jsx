@@ -46,6 +46,11 @@ export default function TeacherSubmission( { classroomId } ) {
     const handleBack = () => {
       navigate('/dashboard');
     };
+    
+    // for the button of "Add Feedback"
+    const AddFeedback = () =>{
+
+    }
 
 
 
@@ -79,6 +84,17 @@ export default function TeacherSubmission( { classroomId } ) {
           {/* Add other options related to class if needed */}
         </Select>
       </div>
+      <div className="top-bar" style={{ marginTop: '200px'}}>
+        <button> 
+          <div className="top-bar AddFeedback">Add Feedback</div>
+        </button>
+
+        <button onClick={AddFeedback}> 
+          <div className="top-bar Grade">Grades</div>
+        </button>
+      </div>
+
+      <div className="Student-submission" style={{ marginTop: '20px', marginBottom: '50px' }}></div>
     </div>
     );
 }
