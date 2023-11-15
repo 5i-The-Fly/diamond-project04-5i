@@ -2,7 +2,7 @@
 // - Brody
 
 import React, { useEffect, useState } from 'react';
-import { Table, Tag, Input, message } from 'antd';
+import { Table, Select, Tag, Input, message } from 'antd';
 import './TeacherSubmission.less'
 
 
@@ -11,19 +11,19 @@ import {
   getLessonModuleActivities,
   getClassroom,
   getSession,
+  getStudent,
 } from '../../../../../src/Utils/requests'; // TODO: so many ../ 
 
 
 
 // creating a new component modeled after Roster.jsx
-export default function TeacherGradebook( { classroomId } ) {
+export default function TeacherSubmission( { classroomId } ) {
   // these are the state variables we need access to
   const [classroom, setClassroom] = useState({});
   const [submissions, setSubmissions] = useState([]);
   const [activities, setActivities] = useState([]); // this is an array, so we do the [] thing
   const [students, setStudents] = useState([]);
   const [activeLessonModule, setActiveLessonModule] = useState(null); // TODO: not sure if this is needed beyond getting activities, could be const?
-
 
   // useEffect will get us all our necessary state variables methinks
   useEffect(() => {
@@ -41,28 +41,42 @@ export default function TeacherGradebook( { classroomId } ) {
       }
     });
     }, [classroomId]);
-  
 
     // for the back button!
     const handleBack = () => {
       navigate('/dashboard');
     };
 
-
-
     return (
       <div>
+      <button id='home-back-btn' onClick={handleBack}>
+        <i className='fa fa-arrow-left' aria-hidden='true' />
+      </button>
 
-      
-        <button id='home-back-btn' onClick={handleBack}>
-          <i className='fa fa-arrow-left' aria-hidden='true' />
-        </button>
-      
-        <div className="submission-menu">
-        <div className="section section1">Section 1</div>
-        <div className="section section2">Section 2</div>
-        <div className="section section3">Section 3</div>
-      </div> 
+      <div className="submission-menu">
+        <Select defaultValue="Student" className='section'>
+          {/* Dropdown menu for Student section */}
+          {students.map((student) => (
+            <Option key={student.id} value={student.name}/>
+          ))}
+          {/* Add other options related to students if needed */}
+        </Select>
+
+        <Select defaultValue="Activity" className="section">
+          {/* Dropdown menu for Activity section */}
+          {...activities.map((activity) => (
+            <Option value={"Level" + activity.number}/>
+          ))}
+
+          {/* Add other options related to students if needed */}
+        </Select>
+
+        <Select defaultValue="Class" className="section">
+          {/* Dropdown menu for Class section */}
+            <Option key ={classroomId} value={classroomId}/>
+          {/* Add other options related to class if needed */}
+        </Select>
       </div>
+    </div>
     );
 }
