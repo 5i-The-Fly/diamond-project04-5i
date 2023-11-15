@@ -47,6 +47,8 @@ export default function TeacherSubmission( { classroomId } ) {
       navigate('/dashboard');
     };
 
+
+
     return (
       <div>
       <button id='home-back-btn' onClick={handleBack}>
