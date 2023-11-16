@@ -103,17 +103,6 @@ export default function TeacherGradebook( { classroomId } ) {
 
 
 
-  // Adjust render method for cells based on edit mode
-  const renderCell = (activitySubmissions, record, activity) => {
-    return (
-      <CellButton 
-        student={record.student}
-        activity={activity}
-        submissions={activitySubmissions}
-      />
-    );
-  };
-
   // Construct columns for table display
   const columns = [
     {
@@ -165,9 +154,6 @@ export default function TeacherGradebook( { classroomId } ) {
       <MentorSubHeader
         title={'Gradebook'}
       />
-      <button onClick={toggleEditMode}>
-        {isEditMode ? "Lock Gradebook" : "Edit Grades"}
-      </button>
       <div id="table-container">
         <Table
         columns = {columns}
