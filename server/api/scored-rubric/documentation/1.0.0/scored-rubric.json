@@ -618,7 +618,7 @@
               "criteria": {
                 "type": "object"
               },
-              "total_score": {
+              "max_score": {
                 "type": "number"
               },
               "scored_rubrics": {

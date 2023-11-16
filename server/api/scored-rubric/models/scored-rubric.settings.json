@@ -22,8 +22,8 @@
       "type": "decimal"
     },
     "template_rubric": {
-      "model": "rubric",
-      "via": "scored_rubrics"
+      "via": "scored_rubrics",
+      "model": "rubric"
     }
   }
 }

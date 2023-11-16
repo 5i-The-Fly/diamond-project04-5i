@@ -21,6 +21,10 @@
 //    [ ] Color based on display score
 //    [ ] Send to submission tab
 //    [ ] Send to specific submissions
+// [ ] Edit grades state and toggle button
+//    [ ] Make state for edit mode
+//    [ ] Create the toggle button
+//    [ ] Make the button change the state of the input cells
 // [x] Display score
 //    [x] Default value for tetsts
 //    [x] If submission doesn't exist, display '-'
@@ -97,6 +101,19 @@ export default function TeacherGradebook( { classroomId } ) {
       });
     }, [classroomId]);
 
+
+
+  // Adjust render method for cells based on edit mode
+  const renderCell = (activitySubmissions, record, activity) => {
+    return (
+      <CellButton 
+        student={record.student}
+        activity={activity}
+        submissions={activitySubmissions}
+      />
+    );
+  };
+
   // Construct columns for table display
   const columns = [
     {
@@ -148,6 +165,9 @@ export default function TeacherGradebook( { classroomId } ) {
       <MentorSubHeader
         title={'Gradebook'}
       />
+      <button onClick={toggleEditMode}>
+        {isEditMode ? "Lock Gradebook" : "Edit Grades"}
+      </button>
       <div id="table-container">
         <Table
         columns = {columns}

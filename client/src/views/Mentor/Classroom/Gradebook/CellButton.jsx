@@ -1,19 +1,47 @@
-import { Button, Dropdown } from "antd";
-import { DownOutlined, UserOutlined } from '@ant-design/icons';
+import React, { useState, useEffect } from 'react';
+import { Button, Dropdown, Input, Menu, message } from "antd";
+import { UserOutlined } from '@ant-design/icons';
 
-export default function CellButton ( { student, activity, submissions} ) {
+export default function CellButton ( { student, activity, submissions, onScoreChange } ) {
 
     // Text to be displayed when the student has no submission for the activity.
     const noSubmissionValue = "-"
     const ungradedValue = "Grade Pending"
-    // Text to display in the main part of the button. The student's current grade for that assignment.
-    function getDisplayScore()  {
-    // TODO: change this from a ternary to a try-catch
-    // TODO: allow teachers to choose which submission is used.
-    // TODO: doesn't a submission need to be scored before it's displayed...? needs a submitted/ungraded
-    //return submissions.length === 0 ? noSubmissionValue : 90
-    return 90
+    // Local state to store the edited score
+    const [editedScore, setEditedScore] = useState(90); // default score of 90 for now
+    // Local state to track edit mode for this cell
+    const [isCellEditMode, setIsCellEditMode] = useState(false);
+
+
+    // Toggle edit mode for the cell
+    const toggleCellEditMode = () => {
+        setIsCellEditMode(!isCellEditMode);
+    };
+
+
+    useEffect(() => {
+        // If submissions array is valid and has elements, update the edited score
+        if (Array.isArray(submissions) && submissions.length > 0) {
+            // TODO: For each submission, get its scored rubric, and determine the maximum scored submission
+            setEditedScore(submissions[0].score); // Example: get the score from the first submission
+        }
+    }, [submissions]);
+
+    // Modify getDisplayScore to use editedScore
+    function getDisplayScore() {
+        return editedScore;
     }
+
+
+    // Function to handle score change and exit edit mode
+    const handleScoreSave = (e) => {
+        if (e.type === 'blur' || (e.type === 'keydown' && e.key === 'Enter')) {
+            setIsCellEditMode(false);
+            if (onScoreChange) {
+                onScoreChange(student, activity, editedScore);
+            }
+        }
+    };
 
     function dynamicColoring() {
         let score = getDisplayScore()
@@ -30,6 +58,8 @@ export default function CellButton ( { student, activity, submissions} ) {
             return '#FFBF00'; // Amber
         } else if (score >= 60 && score < 70) {
             return '#FFA500'; // Orange
+        } else if (score === 0) {
+            return 'grey'; // Grey for ungraded
         } else {
             return 'red'; // Red for all other scores
         }
@@ -41,6 +71,7 @@ export default function CellButton ( { student, activity, submissions} ) {
         label: 'Change grade',
         key: '1',
         icon: <UserOutlined />,
+        onClick: toggleCellEditMode
     },
     {
         label: 'View submission',
@@ -54,7 +85,7 @@ export default function CellButton ( { student, activity, submissions} ) {
         danger: true,
     },
     {
-        label: '4rd menu item',
+        label: '4th menu item',
         key: '4',
         icon: <UserOutlined />,
         danger: true,
@@ -62,37 +93,42 @@ export default function CellButton ( { student, activity, submissions} ) {
     },
     ];
 
-    const handleMainButtonClick = (e) => {
-        message.info('Click on left button.');
-        console.log('click left button', e);
-    };
 
     const handleMenuButtonClick = (e) => {
         message.info('Click on menu button.');
         console.log('click menu button', e);
     };
 
-    const menuProps = {
-        items,
-        onClick: handleMenuButtonClick,
-    };
 
-
-    const buttonsRender = ([leftButton, rightButton]) => [
-        <Button style={{backgroundColor: dynamicColoring()}}>
-            {getDisplayScore()}
-        </Button>,
-        rightButton
-    ]
-
+    if (isCellEditMode) {
     return (
-    <div>
-        <Dropdown.Button
-        menu={menuProps}
-        buttonsRender={buttonsRender}
-        onClick={handleMainButtonClick}>
-        {getDisplayScore()}
-        </Dropdown.Button>
-    </div>
+        <Input
+            type="number"
+            value={editedScore}
+            onChange={(e) => setEditedScore(Number(e.target.value))}
+            onBlur={handleScoreSave}
+            onKeyDown={handleScoreSave}
+            autoFocus
+        />
     );
+    } else {
+        // Define the dropdown menu
+        const dropdownMenu = (
+            <Menu onClick={handleMenuButtonClick}>
+                {items.map(item => (
+                    <Menu.Item key={item.key} icon={item.icon} onClick={item.onClick}>
+                        {item.label}
+                    </Menu.Item>
+                ))}
+            </Menu>
+        );
+
+        return (
+            <Dropdown overlay={dropdownMenu} trigger={['click']}>
+                <Button style={{ backgroundColor: dynamicColoring() }}>
+                    {getDisplayScore()}
+                </Button>
+            </Dropdown>
+        );
+    }
 }

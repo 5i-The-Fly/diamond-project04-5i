@@ -21,7 +21,7 @@
     "criteria": {
       "type": "json"
     },
-    "total_score": {
+    "max_score": {
       "type": "decimal"
     },
     "scored_rubrics": {
