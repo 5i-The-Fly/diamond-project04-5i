@@ -670,9 +670,6 @@
               "id": {
                 "type": "string"
               },
-              "template_rubric": {
-                "type": "string"
-              },
               "submission": {
                 "type": "string"
               },
@@ -682,10 +679,7 @@
               "total_score": {
                 "type": "number"
               },
-              "evaluator_comments": {
-                "type": "string"
-              },
-              "evaluationDate": {
+              "template_rubric": {
                 "type": "string"
               },
               "published_at": {

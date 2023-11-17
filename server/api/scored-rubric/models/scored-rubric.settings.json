@@ -11,10 +11,6 @@
     "draftAndPublish": true
   },
   "attributes": {
-    "template_rubric": {
-      "via": "scored_rubric",
-      "model": "rubric"
-    },
     "submission": {
       "via": "scored_rubric",
       "model": "submission"
@@ -25,11 +21,9 @@
     "total_score": {
       "type": "decimal"
     },
-    "evaluator_comments": {
-      "type": "richtext"
-    },
-    "evaluationDate": {
-      "type": "datetime"
+    "template_rubric": {
+      "via": "scored_rubrics",
+      "model": "rubric"
     }
   }
 }

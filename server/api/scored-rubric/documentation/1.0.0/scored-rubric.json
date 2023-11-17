@@ -535,52 +535,6 @@
           "id": {
             "type": "string"
           },
-          "template_rubric": {
-            "required": [
-              "id"
-            ],
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "title": {
-                "type": "string"
-              },
-              "description": {
-                "type": "string"
-              },
-              "criteria": {
-                "type": "object"
-              },
-              "activity": {
-                "type": "string"
-              },
-              "total_score": {
-                "type": "number"
-              },
-              "templateRubric_id": {
-                "type": "uid"
-              },
-              "creation_date": {
-                "type": "string"
-              },
-              "last_modified": {
-                "type": "string"
-              },
-              "scored_rubric": {
-                "type": "string"
-              },
-              "published_at": {
-                "type": "string"
-              },
-              "created_by": {
-                "type": "string"
-              },
-              "updated_by": {
-                "type": "string"
-              }
-            }
-          },
           "submission": {
             "required": [
               "id",
@@ -647,12 +601,42 @@
           "total_score": {
             "type": "number"
           },
-          "evaluator_comments": {
-            "type": "string"
-          },
-          "evaluationDate": {
-            "type": "string",
-            "format": "date-time"
+          "template_rubric": {
+            "required": [
+              "id"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "activity": {
+                "type": "string"
+              },
+              "criteria": {
+                "type": "object"
+              },
+              "max_score": {
+                "type": "number"
+              },
+              "scored_rubrics": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "published_at": {
+                "type": "string"
+              },
+              "created_by": {
+                "type": "string"
+              },
+              "updated_by": {
+                "type": "string"
+              }
+            }
           },
           "published_at": {
             "type": "string",
@@ -662,9 +646,6 @@
       },
       "NewScored-rubric": {
         "properties": {
-          "template_rubric": {
-            "type": "string"
-          },
           "submission": {
             "type": "string"
           },
@@ -674,12 +655,8 @@
           "total_score": {
             "type": "number"
           },
-          "evaluator_comments": {
+          "template_rubric": {
             "type": "string"
-          },
-          "evaluationDate": {
-            "type": "string",
-            "format": "date-time"
           },
           "published_at": {
             "type": "string",
