@@ -7,72 +7,149 @@
 @sectionWidth: 30%;
 @containerWidth: 90%;
 
-// Styles for the bar box
+/* Styles for the submission menu */
 .submission-menu {
-  background-color: @lightBlue;
-  display: flex;
-  justify-content: space-between;
-  align-items: center; /* Align items vertically in the center */
-  height: @barHeight;
-  border-radius: 25px; // Apply border-radius for curved sides
-  overflow: hidden;
-  padding: 0 20px; // Add padding to create buffer space on both sides
-}
+    background-color: @lightBlue;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 50px; /* Adjust height as needed */
+    border-radius: 25px;
+    overflow: hidden;
+    padding: 0 40px;
+  }
 
 .Student-submission{
   background-color: #FFFFFF;
-  display: flex; //  It makes the element a flex container, enabling you to use flex properties on its children
+  display: flex;                  //  It makes the element a flex container, enabling you to use flex properties on its children
   justify-content: space-between; // the items are evenly distributed
   align-items: center; 
-  height: 20cm; // Set the height to 10cm
+  height: 20cm; 
   width: @containerWidth;
   overflow: hidden;
-  padding: 0 20px; // Add padding to create buffer space on both sides
-  margin: auto; /* Add this line to center the container horizontally */
+  padding: 0 20px; 
+  margin: auto;                   /* Add this line to center the container horizontally */
 }
 
 .top-bar {
-  background-color: #D3D3D3; /* Set the background color of the top bar */
-  display: flex; //  It makes the element a flex container, enabling you to use flex properties on its children
+  background-color: @lightBlue; 
+  display: flex;                  //  It makes the element a flex container, enabling you to use flex properties on its children
   justify-content: space-between; // the items are evenly distributed
   align-items: center; 
-  flex-direction: column; /* Stack children vertically */
-  height: 2cm; /* Set the height of the top bar */
+  flex-direction: column;          /* Stack children vertically */
+  height: 2cm; 
   width: @containerWidth;
-  // border-radius: 15px 15px 0 0; /* Apply border-radius for curved top corners */
-  margin: auto; /* Add this line to center the container horizontally */
+  border-radius: 15px 15px 0px 0px; /* Apply border-radius for curved top corners */
+  margin: auto; 
 }
 
-.AddFeedback {
-  /* Add styles for the button */
-  background-color: #111111;
-  color: #454545;
+.feedback-button {
+  background-color: transparent; 
+  display: flex;                 
+  justify-content: flex-start;   /* Align to the left within the container */
+  border: none; 
+  width: 100px; 
+  height: 40px; 
+  margin-left: 10px; 
+  margin-top: 5px;
+  cursor: pointer;
+}
+
+
+.comment-bar {
+  background-color: @lightBlue; 
+  display: flex;                  //  It makes the element a flex container, enabling you to use flex properties on its children
+  justify-content: space-between; // the items are evenly distributed
+  align-items: center; 
+  flex-direction: column;          /* Stack children vertically */
+  height: 2cm; 
+  width: 20%;
+  border-radius: 15px 15px 0px 0px; /* Apply border-radius for curved top corners */
+  margin-left: 5%; /* Set margin-left to 0 to align to the left */
+}
+
+.Student-comment{
+  background-color: #FFFFFF;
+  display: flex;                  
+  justify-content: space-between; 
+  align-items: center; 
+  height: 5cm; 
+  width: @containerWidth;
+  overflow: hidden;
+  padding: 0 20px; 
+  margin: auto;                  
+}
+
+.comment-text{
+  font-family:  Arial; 
+  text-align: center;
+  font-weight: bold;
+  font-size: 20px; 
+  color: #454545; 
+  margin-top: 6%;
+}
   
-}
-
-// Styles for the sections within the bar box
-.section {
+  /* Styles for the sections within the submission menu */
+  .section {
     flex: 1;
     width: @sectionWidth;
     justify-content: center;
     align-items: center;
-    margin-bottom: 0;
     display: flex;
-    color: #colors[text-secondary];
+    color: @lightBlue; /* Default text color */
     height: auto;
-    background: #colors[secondary];
+    background: transparent; /* Default background color */
     font-size: 1.2em;
     text-align: center;
     margin: 0 5px;
+    font-weight: 600;
 
-}
+    &:nth-child(2) {
+        flex: 2; /* Middle section, twice as large */
+      }
+    
+      &:not(:nth-child(2)) {
+        flex: 1; /* Outside sections */
+      }
+  
+    .ant-select {
+      width: @sectionWidth;
 
-// Applying styles to individual sections
-.section1, .section2, .section3 {
-  .section;
-}
+    }
+  
+    .ant-select-selector {
+      border: none;
+      border-radius: 4px;
+      padding: 8px 15px;
+      height: auto;
+      line-height: normal;
+      background-color: @lightBlue; /* Light blue background for dropdown selector */
+      color: black; /* Default text color */
+      font-size: 1.2em;
+      font-weight: 600;
+      &:hover,
+      &:focus {
+        border-color: transparent;
+        box-shadow: none;
+      }
+    }
+  
+    .ant-select-arrow {
+      color: #333; /* Default text color */
+    }
+  
+    .ant-select-dropdown {
+      background-color: transparent; /* Light blue background for dropdown menu */
+      .ant-select-item {
+        padding: 8px 15px;
+        font-size: 1.2em;
+        font-weight: 600;
+        color: white; /* Default text color */
+      }
+    }
+  }
 
-// Applying the styles to buttion name in top-bar
-.AddFeedback, .Grades{
-  .top-bar;
-}
+  // Applying the styles to buttion name in top-bar
+  .AddFeedback, .Grades{
+    .top-bar;
+  }
