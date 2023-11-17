@@ -103,6 +103,75 @@ export default function TeacherGradebook( { classroomId } ) {
 
 
 
+    // TODO: CYRUS: Finish implementing the routes in order to properly test data pulling with the following code.
+    useEffect(() => {
+      const fetchClassroomData = async () => {
+        const classroomResponse = await getClassroom(classroomId);
+        if (!classroomResponse.data) {
+          message.error(classroomResponse.err);
+          return;
+        }
+        const classroom = classroomResponse.data;
+    
+        // Set Students
+        setStudents(classroom.students);
+    
+        // Fetch and Set Activities with their Max Scores
+        for (const selection of classroom.selections) {
+          if (selection.current) {
+            const lsRes = await getLessonModule(selection.lesson_module);
+            if (lsRes.data) {
+              const activityRes = await getLessonModuleActivities(lsRes.data.id);
+              if (activityRes.data) {
+                const activitiesWithMaxScores = await Promise.all(activityRes.data.map(async (activity) => {
+                  const maxScore = await getTemplateRubricMaxScore(activity.rubric);
+                  return { ...activity, maxScore };
+                }));
+                setActivities(activitiesWithMaxScores);
+              } else {
+                message.error(activityRes.err);
+              }
+            } else {
+              message.error(lsRes.err);
+            }
+          }
+        }
+    
+        // Fetch Submissions for Each Student
+        for (const student of classroom.students) {
+          const studentSessions = await getSessionsForStudent(student.id);
+          for (const session of studentSessions) {
+            const submissions = await getSubmissionsForSession(session.id);
+            for (const submission of submissions) {
+              const scoredRubric = await getScoredRubricForSubmission(submission.id);
+              submission.scored_rubric = scoredRubric;
+            }
+            session.submissions = submissions;
+          }
+        }
+    
+        students.forEach((student) => {
+          activities.forEach((activity) => {
+            const submissions = classSubmissions.get([student, activity]);
+            if (submissions && submissions.length > 0) {
+              const totalScore = submissions[0].scored_rubric.total_score;
+              const maxScore = activity.maxScore;
+              const percentage = (totalScore / maxScore) * 100;
+              console.log(`${student.name} percentage for activity ${activity.number}: ${percentage}%`);
+            } else {
+              console.log(`${student.name} has no submissions for activity ${activity.number}`);
+            }
+          });
+        });
+      };
+    
+      fetchClassroomData();
+    
+    }, [classroomId]);
+    
+
+
+
   // Construct columns for table display
   const columns = [
     {
