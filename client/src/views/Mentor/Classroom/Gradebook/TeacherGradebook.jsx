@@ -53,6 +53,8 @@ export default function TeacherGradebook( { classroomId } ) {
   const [activities, setActivities] = useState([]); 
   const [students, setStudents] = useState([]);
   const [classSubmissions, setClassSubmissions] = useState([]); // Maps a student and activity pair to an array of submissions. One submission can appear multiple times.
+  const [tableData, setTableData] = useState([]);
+  const [columns, setColumns] = useState([]);
 
   // useEffect will get us all our necessary state variables methinks.
   // TODO: Is this called every time data is updated? Worried about speed if we're remaking the table every time.
@@ -247,11 +249,11 @@ export default function TeacherGradebook( { classroomId } ) {
     }
 
     // Log the student and activity being processed
-    console.log(`Calculating score for Student ID: ${student.id}, Activity ID: ${activity.id}`);
+    //console.log(`Calculating score for Student ID: ${student.id}, Activity ID: ${activity.id}`);
 
     const submissionsForActivity = student.sessions.flatMap(session => {
     // Log the submissions in the session
-    console.log(`Session ID: ${session.id}, Submissions:`, session.submissions);
+    //console.log(`Session ID: ${session.id}, Submissions:`, session.submissions);
 
     return session.submissions.filter(submission => {
       // Check if submission.activity is not null before accessing id
@@ -264,7 +266,7 @@ export default function TeacherGradebook( { classroomId } ) {
     });
 
     // Log the filtered submissions for the activity
-    console.log(`Submissions for Activity ID ${activity.id}:`, submissionsForActivity);
+    //console.log(`Submissions for Activity ID ${activity.id}:`, submissionsForActivity);
 
     let totalScore = submissionsForActivity.reduce((acc, submission) => 
       acc + (submission.scored_rubric ? submission.scored_rubric.total_score : 0), 0
@@ -286,23 +288,46 @@ export default function TeacherGradebook( { classroomId } ) {
         setActivities(activitiesWithMaxScores);
 
         // Debugging: Log activities and students
-        console.log("Activities with Max Scores:", activitiesWithMaxScores);
-        console.log("Initial Students:", classroom.students);
+        //console.log("Activities with Max Scores:", activitiesWithMaxScores);
+        //console.log("Initial Students:", classroom.students);
   
         const { submissions, scoredRubrics } = await fetchSubmissionsAndRubrics();
         const allSessions = await fetchAllSessions();
         const updatedStudents = processStudents(classroom, allSessions, submissions, scoredRubrics);
 
-        // Debugging: Log updated students
-        console.log("Updated Students:", updatedStudents);
-  
         updatedStudents.forEach(student => {
           student.scores = calculateScoresForStudent(student, activitiesWithMaxScores);
-          // Debugging: Log student scores
-          console.log(`Scores for student ${student.name}:`, student.scores);
         });
-  
-        setStudents(updatedStudents);
+
+        setStudents(updatedStudents); // Ensure this is after score calculation
+
+
+        const newColumns = [
+          {
+            title: 'Student',
+            dataIndex: 'name',
+            key: 'name',
+          },
+          ...activities.map(activity => ({
+            key: activity.id,
+            title: `Activity ${activity.number}`,
+            render: (_, student) => {
+              const score = student.scores[activity.id];
+              console.log("Student:", student.name, "Activity:", activity.number, "Score:", score)
+              return (
+                <CellButton 
+                  student={student}
+                  activity={activity}
+                  score={score}
+                />
+              );
+            }
+          }))
+        ];
+    
+        setColumns(newColumns);
+        setTableData(updatedStudents);
+
       } catch (error) {
         console.error("Error fetching data:", error);
         message.error("Error fetching classroom data");
@@ -318,58 +343,39 @@ export default function TeacherGradebook( { classroomId } ) {
 
 
 
-  // Construct columns for table display
+ /*
   const columns = [
     {
-      // first column for the student name
       title: 'Student',
-      dataIndex: 'studentName',
-      key: 'studentName'
+      dataIndex: 'name',
+      key: 'name'
     },
-    // subsequent columns for each activity
-    ...activities.map((activity) => ({ // '.map()' constructs an array, '...' unpacks it.
-        key: activity.number,
-        title: 'Level ' + activity.number,
-        dataIndex: ['studentSubmissions', activity], // sets cell value equal to tableData[student].studentSubmissions[activity]
-        // Cyrus: New score color scheme
-        render: (activitySubmissions, record) => {
-          return (
-            <CellButton 
-            student={record.student}
+    ...activities.map(activity => ({
+      key: activity.id,
+      title: `Activity ${activity.number}`,
+      render: (_, student) => {
+        // Safely access the score for the current activity
+        const activityScore = student.scores ? student.scores[activity.id] : null;
+  
+        return (
+          <CellButton 
+            student={student}
             activity={activity}
-            submissions={activitySubmissions}
-            />
-          );
-      },
-    })),
+            score={activityScore} // Safely pass the score
+          />
+        );
+      }
+    }))
   ];
+  
+  
+  const tableData = students.map(student => ({
+    key: student.id,
+    name: student.name,
+    scores: student.scores // Presuming scores are already part of student data
+  }));
 
-
-
-  // Construct data for table display
-  const tableData = students.map((student) => {
-    const studentSubmissions = activities.reduce((accumulate, activity) => {
-      // Check if sessions and submissions are defined and are arrays
-      const submissions = student.sessions && Array.isArray(student.sessions) ? 
-        student.sessions.flatMap(session => 
-          session.submissions && Array.isArray(session.submissions) ?
-          session.submissions.filter(submission => submission.activity && activity && submission.activity.id === activity.id) : []
-        ) : [];
-
-      const percentage = student.scores && student.scores[activity.id] ? student.scores[activity.id] : 0;
-      accumulate[activity.id] = { submissions, percentage };
-      return accumulate;
-    }, {});
-
-    // Debugging: Log studentSubmissions
-    console.log(`Submissions for student ${student.name}:`, studentSubmissions);
-
-    return {
-      key: student.id,
-      studentName: student.name,
-      studentSubmissions
-    };
-  });
+*/
 
   
 
