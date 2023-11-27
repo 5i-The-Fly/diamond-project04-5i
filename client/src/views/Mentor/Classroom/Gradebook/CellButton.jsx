@@ -66,21 +66,21 @@ export default function CellButton({ student, activity, score }) {
     };
 
     // Function for dynamic coloring based on score
-    function dynamicColoring(score) {
-        console.log("SCORE: ", score);
-        if (score === noSubmissionValue) {
+    function dynamicColoring(editedScore) {
+        console.log("SCORE: ", editedScore);
+        if (editedScore === noSubmissionValue) {
             return 'gray';
-        } else if (score >= 95) {
+        } else if (editedScore >= 95) {
             return '#008000'; // Dark Green
-        } else if (score >= 90 && score < 95) {
+        } else if (editedScore >= 90 && editedScore < 95) {
             return '#32CD32'; // Lime Green
-        } else if (score >= 80 && score < 90) {
+        } else if (editedScore >= 80 && editedScore < 90) {
             return '#90EE90'; // Light Green
-        } else if (score >= 70 && score < 80) {
+        } else if (editedScore >= 70 && editedScore < 80) {
             return '#FFBF00'; // Amber
-        } else if (score >= 60 && score < 70) {
+        } else if (editedScore >= 60 && editedScore < 70) {
             return '#FFA500'; // Orange
-        } else if (score === 0) {
+        } else if (editedScore === 0) {
             return 'grey'; // Grey for ungraded
         } else {
             return 'red'; // Red for all other scores
@@ -147,7 +147,7 @@ export default function CellButton({ student, activity, score }) {
     
         return (
             <Dropdown overlay={dropdownMenu} trigger={['click']}>
-                <Button style={{ backgroundColor: dynamicColoring(score) }}>
+                <Button style={{ backgroundColor: dynamicColoring(editedScore) }}>
                     {getDisplayScore()}
                 </Button>
             </Dropdown>
