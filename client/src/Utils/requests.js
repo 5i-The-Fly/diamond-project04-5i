@@ -700,3 +700,25 @@ export const getClassroomWorkspace = async (id) =>
     auth: true,
     error: 'Unable to retrive classroom workspaces',
   });
+
+
+
+export const getSubmissions = async () => {
+    return makeRequest({
+      method: 'GET',
+      path: `${server}/submissions`,
+      auth: true,
+      error: 'Submissions could not be retrieved.',
+    });
+  };
+
+  export const getScoredRubrics = async () => {
+    return makeRequest({
+      method: 'GET',
+      path: `${server}/scored-rubrics`,
+      auth: true,
+      error: 'Scored rubrics could not be retrieved.',
+    });
+  };
+
+  

@@ -42,6 +42,9 @@ import {
   getLessonModule,
   getLessonModuleActivities,
   getClassroom,
+  getSubmissions,
+  getScoredRubrics,
+  getSessions,
 } from '../../../../../src/Utils/requests';
 
 
@@ -103,72 +106,215 @@ export default function TeacherGradebook( { classroomId } ) {
 
 
 
-    // TODO: CYRUS: Finish implementing the routes in order to properly test data pulling with the following code.
-    useEffect(() => {
-      const fetchClassroomData = async () => {
-        const classroomResponse = await getClassroom(classroomId);
-        if (!classroomResponse.data) {
-          message.error(classroomResponse.err);
-          return;
-        }
-        const classroom = classroomResponse.data;
-    
-        // Set Students
-        setStudents(classroom.students);
-    
-        // Fetch and Set Activities with their Max Scores
-        for (const selection of classroom.selections) {
-          if (selection.current) {
-            const lsRes = await getLessonModule(selection.lesson_module);
-            if (lsRes.data) {
-              const activityRes = await getLessonModuleActivities(lsRes.data.id);
-              if (activityRes.data) {
-                const activitiesWithMaxScores = await Promise.all(activityRes.data.map(async (activity) => {
-                  const maxScore = await getTemplateRubricMaxScore(activity.rubric);
-                  return { ...activity, maxScore };
-                }));
-                setActivities(activitiesWithMaxScores);
-              } else {
-                message.error(activityRes.err);
+  const fetchClassroomData = async (classroomId) => {
+    const response = await getClassroom(classroomId);
+    if (!response.data) {
+      message.error(response.err);
+      return null;
+    }
+    return response.data;
+  };
+
+  // Fetches all activities for the current lesson module and adds the max score to each activity
+  const fetchActivitiesWithMaxScores = async (classroom) => {
+    const activities = await Promise.all(classroom.selections.map(async (selection) => { 
+      if (selection.current) {
+        const lsRes = await getLessonModule(selection.lesson_module);
+        if (lsRes.data) {
+          const activityRes = await getLessonModuleActivities(lsRes.data.id);
+          if (activityRes.data) {
+            return Promise.all(activityRes.data.map(async (activity) => { 
+              const rubric = activity.rubric;
+              if (!rubric) {
+                console.log("No rubric for activity:", activity.id);
+                return activity;
               }
-            } else {
-              message.error(lsRes.err);
-            }
+              else {
+                const maxScore = rubric.max_score;
+                return { ...activity, maxScore };
+              }
+            }));
           }
         }
+      }
+      return [];
+    }));
+
+    // console.log("Activities:", activities);
+    return activities.flat();
+  };
+
+
+  const fetchSubmissionsAndRubrics = async () => {
+    const submissionsResponse = await getSubmissions();
+    const scoredRubricsResponse = await getScoredRubrics();
     
-        // Fetch Submissions for Each Student
-        for (const student of classroom.students) {
-          const studentSessions = await getSessionsForStudent(student.id);
-          for (const session of studentSessions) {
-            const submissions = await getSubmissionsForSession(session.id);
-            for (const submission of submissions) {
-              const scoredRubric = await getScoredRubricForSubmission(submission.id);
-              submission.scored_rubric = scoredRubric;
-            }
-            session.submissions = submissions;
-          }
-        }
-    
-        students.forEach((student) => {
-          activities.forEach((activity) => {
-            const submissions = classSubmissions.get([student, activity]);
-            if (submissions && submissions.length > 0) {
-              const totalScore = submissions[0].scored_rubric.total_score;
-              const maxScore = activity.maxScore;
-              const percentage = (totalScore / maxScore) * 100;
-              console.log(`${student.name} percentage for activity ${activity.number}: ${percentage}%`);
-            } else {
-              console.log(`${student.name} has no submissions for activity ${activity.number}`);
-            }
+    if (submissionsResponse.err || scoredRubricsResponse.err) {
+      message.error("Error fetching submissions or scored rubrics");
+      return { submissions: [], scoredRubrics: [] };
+    }
+  
+    return {
+      submissions: submissionsResponse.data || [],
+      scoredRubrics: scoredRubricsResponse.data || []
+    };
+  };
+
+  
+  const fetchAllSessions = async () => {
+    const response = await getSessions();
+    if (response.err) {
+      message.error("Error fetching sessions");
+      return [];
+    }
+    // console.log("Sessions Response:", response);
+    return response.data || [];
+  };
+  
+ 
+  const processStudents = (classroom, allSessions, submissions, scoredRubrics) => {
+    // Log the scoredRubrics data to verify its structure
+    // console.log("Scored Rubrics Data:", scoredRubrics);
+  
+    return classroom.students.map((student) => {
+      const studentSessions = allSessions.filter(session => 
+        session.students.some(s => s.id === student.id)
+      );
+  
+      studentSessions.forEach(session => {
+        // console.log("Session:", session, "Student:", student.name);
+      });
+  
+      return {
+        ...student,
+        sessions: studentSessions.map((session) => {
+          const sessionSubmissions = submissions.filter(submission => 
+            submission.session && submission.session.id === session.id
+          );
+
+          sessionSubmissions.forEach(submission => {
+            // console.log(`Processing Submission ID: ${submission.id}`);
+            const scoredRubric = scoredRubrics.find(rubric => {
+              // console.log(`Checking Rubric:`, rubric, `Submission ID Type: ${typeof submission.id}`, `Rubric Submission ID Type: ${typeof rubric.submission}`);
+              return rubric.submission.id === submission.id;
+            }) || {};
+            // console.log(`Found Scored Rubric for Submission ID ${submission.id}:`, scoredRubric);
           });
-        });
+          
+  
+          // console.log("Session Submissions Before:", sessionSubmissions);
+  
+          const updatedSubmissions = sessionSubmissions.map((submission) => {
+            const scoredRubric = scoredRubrics.find(rubric => rubric.submission.id === submission.id) || {};
+            // Log each submission after attaching scored rubric
+            // console.log("Submission with scored_rubric:", {...submission, scored_rubric: scoredRubric});
+            return {
+              ...submission,
+              scored_rubric: scoredRubric
+            };
+          });
+  
+          // console.log("Session Submissions After:", updatedSubmissions);
+          // console.log("Session:", session, "Student:", student.name)
+  
+          return {
+            ...session,
+            submissions: updatedSubmissions
+          };
+        })
       };
-    
-      fetchClassroomData();
-    
-    }, [classroomId]);
-    
+    });
+  };
+  
+  
+
+
+  // This function will calculate scores for each student
+  const calculateScoresForStudent = (student, activities) => {
+    let scores = {};
+    activities.forEach(activity => {
+      scores[activity.id] = calculateScore(student, activity);
+    });
+    return scores;
+  };
+
+  // Modify the calculateScore function to properly handle the data
+  const calculateScore = (student, activity) => {
+    // Ensure the sessions are defined and are an array
+    if (!student.sessions || !Array.isArray(student.sessions)) {
+      console.error("Invalid sessions data for student:", student);
+      return 0; // Default score
+    }
+
+    // Log the student and activity being processed
+    console.log(`Calculating score for Student ID: ${student.id}, Activity ID: ${activity.id}`);
+
+    const submissionsForActivity = student.sessions.flatMap(session => {
+    // Log the submissions in the session
+    console.log(`Session ID: ${session.id}, Submissions:`, session.submissions);
+
+    return session.submissions.filter(submission => {
+      // Check if submission.activity is not null before accessing id
+      if (submission.activity && submission.activity.id === activity.id) {
+        return true;
+      } else {
+        return false;
+      }
+      });
+    });
+
+    // Log the filtered submissions for the activity
+    console.log(`Submissions for Activity ID ${activity.id}:`, submissionsForActivity);
+
+    let totalScore = submissionsForActivity.reduce((acc, submission) => 
+      acc + (submission.scored_rubric ? submission.scored_rubric.total_score : 0), 0
+    );
+
+    return totalScore > 0 ? (totalScore / activity.maxScore) * 100 : 91; // Default score if no submissions
+  };
+
+  
+  
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const classroom = await fetchClassroomData(classroomId);
+        if (!classroom) return;;
+  
+        const activitiesWithMaxScores = await fetchActivitiesWithMaxScores(classroom);
+        setActivities(activitiesWithMaxScores);
+
+        // Debugging: Log activities and students
+        console.log("Activities with Max Scores:", activitiesWithMaxScores);
+        console.log("Initial Students:", classroom.students);
+  
+        const { submissions, scoredRubrics } = await fetchSubmissionsAndRubrics();
+        const allSessions = await fetchAllSessions();
+        const updatedStudents = processStudents(classroom, allSessions, submissions, scoredRubrics);
+
+        // Debugging: Log updated students
+        console.log("Updated Students:", updatedStudents);
+  
+        updatedStudents.forEach(student => {
+          student.scores = calculateScoresForStudent(student, activitiesWithMaxScores);
+          // Debugging: Log student scores
+          console.log(`Scores for student ${student.name}:`, student.scores);
+        });
+  
+        setStudents(updatedStudents);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        message.error("Error fetching classroom data");
+      }
+    };
+  
+    fetchData();
+  }, [classroomId]);
+  
+
+  
+  
 
 
 
@@ -198,15 +344,34 @@ export default function TeacherGradebook( { classroomId } ) {
     })),
   ];
 
-  // Creates tableData for the display. 
-  const tableData = students.map((student, index) => ({
-    key: index, // TODO: figure out a better way to index students, use a student id if it exists.
-    studentName: student.name,
-    studentSubmissions: activities.reduce((accumulate, activity) => {
-      accumulate[activity] = classSubmissions.get(student, activity);
+
+
+  // Construct data for table display
+  const tableData = students.map((student) => {
+    const studentSubmissions = activities.reduce((accumulate, activity) => {
+      // Check if sessions and submissions are defined and are arrays
+      const submissions = student.sessions && Array.isArray(student.sessions) ? 
+        student.sessions.flatMap(session => 
+          session.submissions && Array.isArray(session.submissions) ?
+          session.submissions.filter(submission => submission.activity && activity && submission.activity.id === activity.id) : []
+        ) : [];
+
+      const percentage = student.scores && student.scores[activity.id] ? student.scores[activity.id] : 0;
+      accumulate[activity.id] = { submissions, percentage };
       return accumulate;
-    }, {}),
-  }));
+    }, {});
+
+    // Debugging: Log studentSubmissions
+    console.log(`Submissions for student ${student.name}:`, studentSubmissions);
+
+    return {
+      key: student.id,
+      studentName: student.name,
+      studentSubmissions
+    };
+  });
+
+  
 
 
   // for the back button!

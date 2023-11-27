@@ -8,24 +8,25 @@ export default function CellButton ( { student, activity, submissions, onScoreCh
     const noSubmissionValue = "-"
     const ungradedValue = "Grade Pending"
     // Local state to store the edited score
-    const [editedScore, setEditedScore] = useState(90); // default score of 90 for now
     // Local state to track edit mode for this cell
     const [isCellEditMode, setIsCellEditMode] = useState(false);
+    const [editedScore, setEditedScore] = useState(submissions?.percentage ?? 87); // Use the calculated percentage or default to 91
+
+
+    console.log("Submissions in CellButton:", submissions);
+
+
+
+    useEffect(() => {
+        setEditedScore(submissions?.percentage ?? 91);
+    }, [submissions]);
+    
 
 
     // Toggle edit mode for the cell
     const toggleCellEditMode = () => {
         setIsCellEditMode(!isCellEditMode);
     };
-
-
-    useEffect(() => {
-        // If submissions array is valid and has elements, update the edited score
-        if (Array.isArray(submissions) && submissions.length > 0) {
-            // TODO: For each submission, get its scored rubric, and determine the maximum scored submission
-            setEditedScore(submissions[0].score); // Example: get the score from the first submission
-        }
-    }, [submissions]);
 
     // Modify getDisplayScore to use editedScore
     function getDisplayScore() {
