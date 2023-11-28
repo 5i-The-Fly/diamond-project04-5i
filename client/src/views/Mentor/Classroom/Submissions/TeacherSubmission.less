@@ -21,33 +21,84 @@
 
 .Student-submission{
   background-color: #FFFFFF;
-  display: flex; //  It makes the element a flex container, enabling you to use flex properties on its children
+  display: flex;                  //  It makes the element a flex container, enabling you to use flex properties on its children
   justify-content: space-between; // the items are evenly distributed
   align-items: center; 
-  height: 20cm; // Set the height to 10cm
+  height: 20cm; 
   width: @containerWidth;
   overflow: hidden;
-  padding: 0 20px; // Add padding to create buffer space on both sides
-  margin: auto; /* Add this line to center the container horizontally */
+  padding: 0 20px; 
+  margin: auto;                   /* Add this line to center the container horizontally */
 }
 
 .top-bar {
-  background-color: #D3D3D3; /* Set the background color of the top bar */
-  display: flex; //  It makes the element a flex container, enabling you to use flex properties on its children
+  background-color: @lightBlue; 
+  display: flex;                  //  It makes the element a flex container, enabling you to use flex properties on its children
+  justify-content: flex-start;
   justify-content: space-between; // the items are evenly distributed
   align-items: center; 
-  flex-direction: column; /* Stack children vertically */
-  height: 2cm; /* Set the height of the top bar */
+  flex-direction: column;          /* Stack children vertically */
+  height: 2cm; 
   width: @containerWidth;
-  // border-radius: 15px 15px 0 0; /* Apply border-radius for curved top corners */
-  margin: auto; /* Add this line to center the container horizontally */
+  border-radius: 15px 15px 0px 0px; /* Apply border-radius for curved top corners */
+  margin: auto; 
 }
 
-.AddFeedback {
-  /* Add styles for the button */
-  background-color: #111111;
-  color: #454545;
-  
+.feedback-button {
+  background-color: transparent; 
+  display: flex;                 
+  justify-content: flex-start;   /* Align to the left within the container */
+  border: none; 
+  width: 100px; 
+  height: 40px; 
+  margin: auto; 
+  margin-left: 10px; 
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.Rubric-button{
+  background-color: transparent; 
+  display: flex;                 
+  border: none; 
+  width: 100px; 
+  height: 40px; 
+  margin: auto; 
+  margin-left: 10px; 
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.comment-bar {
+  background-color: @lightBlue; 
+  display: flex;                  //  It makes the element a flex container, enabling you to use flex properties on its children
+  justify-content: space-between; // the items are evenly distributed
+  align-items: center; 
+  flex-direction: column;          /* Stack children vertically */
+  height: 1.5cm; 
+  width: 20%;
+  border-radius: 15px 15px 0px 0px; /* Apply border-radius for curved top corners */
+  margin-left: 5%; /* Set margin-left to 0 to align to the left */
+}
+
+.Student-comment{
+  background-color: #FFFFFF;
+  display: flex;                  
+  justify-content: space-between; 
+  align-items: center; 
+  height: 5cm; 
+  width: @containerWidth;
+  overflow: hidden;
+  padding: 0 20px; 
+  margin: auto;                  
+}
+
+.comment-text{
+  font-family:  Arial, Helvetica, sans-serif; 
+  text-align: center;
+  font-size: 20px; 
+  color: #454545; 
+  margin-top: 5%;
 }
   
 .description-box {

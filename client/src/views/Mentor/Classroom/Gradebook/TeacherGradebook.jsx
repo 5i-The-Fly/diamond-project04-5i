@@ -17,18 +17,25 @@
 //    [x] Build map
 //        - Key: Student, activity
 //        - Value: Submission[]
-// [ ] Display score
-//    [ ] Default value ()
-//    [ ] If submission doesn't exist, display '-'
 // [ ] Button component
 //    [ ] Color based on display score
 //    [ ] Send to submission tab
 //    [ ] Send to specific submissions
+// [ ] Edit grades state and toggle button
+//    [ ] Make state for edit mode
+//    [ ] Create the toggle button
+//    [ ] Make the button change the state of the input cells
+// [x] Display score
+//    [x] Default value for tetsts
+//    [x] If submission doesn't exist, display '-'
+// [ ] Get display score from the actual rubric (modify getDisplayScore function)
 // [ ] Totals/average row/column
+// [ ] Override score
 // ---------------------------------------------------------------------------------------------------------
 import React, { useEffect, useState } from 'react';
 import { Table, Tag, Input, message } from 'antd';
 import MentorSubHeader from '../../../../components/MentorSubHeader/MentorSubHeader';
+import CellButton from './CellButton.jsx'
 import './TeacherGradebook.less'
 
 import {
@@ -42,174 +49,118 @@ export default function TeacherGradebook( { classroomId } ) {
   // These are the state variables we need access to. Each are arrays, so [] is put inside useState().
   const [activities, setActivities] = useState([]); 
   const [students, setStudents] = useState([]);
-  const [submissionsMap, setSubmissionsMap] = useState([]); // Maps a student and activity pair to an array of submissions. One submission can appear multiple times.
-
-  // Not sure if these are needed, but they were states in the component this was copied from (Home.jsx)
-  //const [classroom, setClassroom] = useState({});
-  //const [activeLessonModule, setActiveLessonModule] = useState(null);
-
-  
+  const [classSubmissions, setClassSubmissions] = useState([]); // Maps a student and activity pair to an array of submissions. One submission can appear multiple times.
 
   // useEffect will get us all our necessary state variables methinks.
   // TODO: Is this called every time data is updated? Worried about speed if we're remaking the table every time.
+
   useEffect(() => {
-    // =Get the classroom from our input id
+    // Get the classroom from our input id
     getClassroom(classroomId).then((res) => {
       if (!res.data) {
         message.error(res.err);
         return
       }
-        // These are not needed beyond getting our other states, so they can be constant inside useEffect.
-        const classroom = res.data;
-        const sessions = classroom.sessions
-        //setClassroom(classroom);
+        // This is not needed beyond getting our other states, so it can be constant inside useEffect.
+      const classroom = res.data;
+      // Get Students
+      setStudents(classroom.students);
 
-        // Get Students
-        setStudents(classroom.students);
-
-        
-        // Get Activities (taken from Home.jsx's approach)
-        classroom.selections.forEach(async (selection) => {
-          if (selection.current) {
-            const lsRes = await getLessonModule(selection.lesson_module);
-            if (!lsRes.data) message.error(lsRes.err); 
+      // Get Activities (taken from Home.jsx's approach)
+      classroom.selections.forEach(async (selection) => {
+        if (selection.current) {
+          const lsRes = await getLessonModule(selection.lesson_module);
+          if (lsRes.data) {
             const activityRes = await getLessonModuleActivities(lsRes.data.id);
             if (activityRes) setActivities(activityRes.data);
-            else {
-              message.error(activityRes.err);
-            }
           }
-        });
+          else { message.error(lsRes.err);}
+        }
+      });
 
         // Create submissions map, assigning each student/activity pair to an array of submissions
-        let tempSubmissionsMap 
-        students.forEach(async (student) => {
-          activities.forEach(async (activity) => {
-            tempSubmissionsMap.set([student, activity], []) // initialize to empty
+        let tempClassSubmissions = new Map();
+        students.forEach((student) => {
+          activities.forEach((activity) => {
+            tempClassSubmissions.set([student, activity], []); // initialize to empty
           });
         });
 
         // Loop through every session, loop through every submission in the session. Loop through every student in submission!
-        // Push submission on to map.
-        classroom.sessions.forEach(async (session) => {
-          session.submissions.forEach(async (submission) => {
-            session.students.forEach(async (student) => {
-              tempSubmissionsMap.get([student, submission.activity]).push(submission)
-
+        // Push submission onto the map.
+        classroom.sessions.forEach((session) => {
+          if (!session.submissions) return;
+          session.submissions.forEach((submission) => {
+            session.students.forEach((student) => {
+              tempClassSubmissions.get([student, submission.activity]).push(submission);
             });
           });
         });
         // Finally!
-        setSubmissionsMap(tempSubmissionsMap)
-
-    });
+        setClassSubmissions(tempClassSubmissions)
+      });
     }, [classroomId]);
 
 
-    // Cyrus: Need to update handleScoreChange to actually save score to database when updated.
-    const handleScoreChange = (e, studentIndex, activityNumber) => {
-      const newScore = parseInt(e.target.value, 10);
-      const studentName = students[studentIndex].name;
 
-      // Log the information to ensure input box corresponds to correct student and activity
-      console.log('Score: ' + newScore + ', Student: ' + studentName + ', Activity: ' + activityNumber);
-      
-      const newStudents = [...students];
-      // const studentIndex = newStudents.findIndex((student) => student.key === key);
-      newStudents[studentIndex].grades[activityNumber] = newScore;
-      setStudents(newStudents);
-
-      // TODO: Cyrus: updates to backend needed here
-    };
-
-
-    
-
-
-
-    // This snippet determines the score for each assignment for every student.
-    // It currently sets it equal to 90.
-    // TODO: Since we have to actually get and save scores, we should probably change this to some actual database thing.
-    // I don't know how to do that, so this works for now :D
-    const defaultScore = 90;
-    const studentScores = students.map((student, index) => ({
-      key: index, // TODO: figure out a better way to index students, use a student id if it exists.
-      studentName: student.name,
-      // this bit sets scores to be key value pairs, mapping an activity to an integer
-      scores: activities.reduce((acc, activity) => {
-        acc[activity.number] = defaultScore;
-        return acc;
-      }, {}),
-    }));
-
-    // So studentScores is a list of [int, string, scores] objects, and scores
-    // is another list of [activity, int] pairs
-
-    
-    // Construct the columns for the table!
-    const columns = [
-      {
-        // first column for the student name
-        title: 'Student',
-        key: 'studentName'
-      },
-      // subsequent columns for each activity
-      ...activities.map((activity) => ({ // .map() constructs an array, ... unpacks it.
+  // Construct columns for table display
+  const columns = [
+    {
+      // first column for the student name
+      title: 'Student',
+      dataIndex: 'studentName',
+      key: 'studentName'
+    },
+    // subsequent columns for each activity
+    ...activities.map((activity) => ({ // '.map()' constructs an array, '...' unpacks it.
         key: activity.number,
         title: 'Level ' + activity.number,
-        dataIndex: ['scores', activity.number.toString()], // sets the cell value equal to the score from studentScores
+        dataIndex: ['studentSubmissions', activity], // sets cell value equal to tableData[student].studentSubmissions[activity]
         // Cyrus: New score color scheme
-        render: (score, record) => {
-          let color;
-          if (score >= 95) {
-            color = '#008000'; // Dark Green
-          } else if (score >= 90 && score < 95) {
-            color = '#32CD32'; // Lime Green
-          } else if (score >= 80 && score < 90) {
-            color = '#90EE90'; // Light Green
-          } else if (score >= 70 && score < 80) {
-            color = '#FFBF00'; // Amber
-          } else if (score >= 60 && score < 70) {
-            color = '#FFA500'; // Orange
-          } else {
-            color = 'red'; // Red for all other scores
-          }
-          // Cyrus: input cell for changing the score
+        render: (activitySubmissions, record) => {
           return (
-            <Input
-              defaultValue={score === 90 ? '-' : score} // Need to replace 90 with default grade logic
-              // onPressEnter={(e) => saveScore(record.key, activity.number)} // need to define saveScore
-              onBlur={(e) => handleScoreChange(e, record.key, activity.number)} // handle on blur
-              onPressEnter={(e) => handleScoreChange(e, record.key, activity.number)} // handle on press enter
+            <CellButton 
+            student={record.student}
+            activity={activity}
+            submissions={activitySubmissions}
             />
           );
-        },
-      })),
-    ];
-    
+      },
+    })),
+  ];
 
-    // for the back button!
-    const handleBack = () => {
-      navigate('/dashboard');
-    };
+  // Creates tableData for the display. 
+  const tableData = students.map((student, index) => ({
+    key: index, // TODO: figure out a better way to index students, use a student id if it exists.
+    studentName: student.name,
+    studentSubmissions: activities.reduce((accumulate, activity) => {
+      accumulate[activity] = classSubmissions.get(student, activity);
+      return accumulate;
+    }, {}),
+  }));
 
 
+  // for the back button!
+  const handleBack = () => {
+    navigate('/dashboard');
+  };
 
-    return (
-      <div>
-        <button id='home-back-btn' onClick={handleBack}>
-          <i className='fa fa-arrow-left' aria-hidden='true' />
-        </button>
-        <MentorSubHeader
-          title={'Gradebook'}
+
+  return (
+    <div>
+      <button id='home-back-btn' onClick={handleBack}>
+        <i className='fa fa-arrow-left' aria-hidden='true' />
+      </button>
+      <MentorSubHeader
+        title={'Gradebook'}
+      />
+      <div id="table-container">
+        <Table
+        columns = {columns}
+        dataSource = {tableData}
+        pagination = {false} // idk what this does, breaks up table if too big?
         />
-        <div id="table-container">
-          <Table
-          columns = {columns}
-          dataSource = {studentScores}
-          pagination = {false} // idk what this does, breaks up table if too big?
-          />
-        </div>
       </div>
-    );
+    </div>
+  );
 }

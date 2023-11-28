@@ -14,31 +14,19 @@
     "title": {
       "type": "string"
     },
-    "description": {
-      "type": "richtext"
-    },
-    "criteria": {
-      "type": "json"
-    },
     "activity": {
       "model": "activity",
       "via": "rubric"
     },
-    "total_score": {
+    "criteria": {
+      "type": "json"
+    },
+    "max_score": {
       "type": "decimal"
     },
-    "templateRubric_id": {
-      "type": "uid"
-    },
-    "creation_date": {
-      "type": "datetime"
-    },
-    "last_modified": {
-      "type": "datetime"
-    },
-    "scored_rubric": {
+    "scored_rubrics": {
       "via": "template_rubric",
-      "model": "scored-rubric"
+      "collection": "scored-rubric"
     }
   }
 }
