@@ -613,6 +613,9 @@
                 "last_logged_in": {
                   "type": "string"
                 },
+                "overall_score": {
+                  "type": "number"
+                },
                 "created_by": {
                   "type": "string"
                 },
@@ -672,6 +675,9 @@
                 },
                 "job_id": {
                   "type": "integer"
+                },
+                "scored_rubric": {
+                  "type": "string"
                 },
                 "created_by": {
                   "type": "string"

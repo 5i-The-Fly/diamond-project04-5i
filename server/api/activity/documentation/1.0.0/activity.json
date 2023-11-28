@@ -886,6 +886,43 @@
           },
           "activity_template": {
             "type": "string"
+          },
+          "rubric": {
+            "required": [
+              "id"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "activity": {
+                "type": "string"
+              },
+              "criteria": {
+                "type": "object"
+              },
+              "max_score": {
+                "type": "number"
+              },
+              "scored_rubrics": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "published_at": {
+                "type": "string"
+              },
+              "created_by": {
+                "type": "string"
+              },
+              "updated_by": {
+                "type": "string"
+              }
+            }
           }
         }
       },
@@ -929,6 +966,9 @@
             }
           },
           "activity_template": {
+            "type": "string"
+          },
+          "rubric": {
             "type": "string"
           },
           "created_by": {

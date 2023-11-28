@@ -1,0 +1,29 @@
+{
+  "kind": "collectionType",
+  "collectionName": "scored_rubrics",
+  "info": {
+    "name": "ScoredRubric",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "submission": {
+      "via": "scored_rubric",
+      "model": "submission"
+    },
+    "score_details": {
+      "type": "json"
+    },
+    "total_score": {
+      "type": "decimal"
+    },
+    "template_rubric": {
+      "via": "scored_rubrics",
+      "model": "rubric"
+    }
+  }
+}

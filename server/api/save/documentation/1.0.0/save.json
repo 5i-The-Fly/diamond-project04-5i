@@ -637,6 +637,9 @@
               "activity_template": {
                 "type": "string"
               },
+              "rubric": {
+                "type": "string"
+              },
               "created_by": {
                 "type": "string"
               },
@@ -674,6 +677,9 @@
               },
               "last_logged_in": {
                 "type": "string"
+              },
+              "overall_score": {
+                "type": "number"
               },
               "created_by": {
                 "type": "string"

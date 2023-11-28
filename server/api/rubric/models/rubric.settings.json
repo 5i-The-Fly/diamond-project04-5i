@@ -1,0 +1,32 @@
+{
+  "kind": "collectionType",
+  "collectionName": "rubrics",
+  "info": {
+    "name": "TemplateRubric",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "activity": {
+      "model": "activity",
+      "via": "rubric"
+    },
+    "criteria": {
+      "type": "json"
+    },
+    "max_score": {
+      "type": "decimal"
+    },
+    "scored_rubrics": {
+      "via": "template_rubric",
+      "collection": "scored-rubric"
+    }
+  }
+}

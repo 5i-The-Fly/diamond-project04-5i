@@ -1,19 +1,18 @@
 {
   "paths": {
-    "/learning-components": {
+    "/rubrics": {
       "get": {
         "deprecated": false,
-        "description": "Find all the learning-components's records",
+        "description": "",
         "responses": {
           "200": {
-            "description": "Retrieve learning-components document(s)",
+            "description": "response",
             "content": {
               "application/json": {
                 "schema": {
-                  "properties": {
-                    "foo": {
-                      "type": "string"
-                    }
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Rubric"
                   }
                 }
               }
@@ -52,7 +51,7 @@
         },
         "summary": "",
         "tags": [
-          "Learning-components"
+          "Rubric"
         ],
         "parameters": [
           {
@@ -195,18 +194,14 @@
       },
       "post": {
         "deprecated": false,
-        "description": "Create a new learning-components record",
+        "description": "Create a new record",
         "responses": {
           "200": {
-            "description": "Retrieve learning-components document(s)",
+            "description": "response",
             "content": {
               "application/json": {
                 "schema": {
-                  "properties": {
-                    "foo": {
-                      "type": "string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/Rubric"
                 }
               }
             }
@@ -244,7 +239,7 @@
         },
         "summary": "",
         "tags": [
-          "Learning-components"
+          "Rubric"
         ],
         "requestBody": {
           "description": "",
@@ -252,26 +247,26 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NewLearning-components"
+                "$ref": "#/components/schemas/NewRubric"
               }
             }
           }
         }
       }
     },
-    "/learning-components/count": {
+    "/rubrics/count": {
       "get": {
         "deprecated": false,
-        "description": "Retrieve the number of learning-components documents",
+        "description": "",
         "responses": {
           "200": {
-            "description": "Retrieve learning-components document(s)",
+            "description": "response",
             "content": {
               "application/json": {
                 "schema": {
                   "properties": {
-                    "foo": {
-                      "type": "string"
+                    "count": {
+                      "type": "integer"
                     }
                   }
                 }
@@ -311,26 +306,22 @@
         },
         "summary": "",
         "tags": [
-          "Learning-components"
+          "Rubric"
         ],
         "parameters": []
       }
     },
-    "/learning-components/{id}": {
+    "/rubrics/{id}": {
       "get": {
         "deprecated": false,
-        "description": "Find one learning-components record",
+        "description": "",
         "responses": {
           "200": {
-            "description": "Retrieve learning-components document(s)",
+            "description": "response",
             "content": {
               "application/json": {
                 "schema": {
-                  "properties": {
-                    "foo": {
-                      "type": "string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/Rubric"
                 }
               }
             }
@@ -368,7 +359,7 @@
         },
         "summary": "",
         "tags": [
-          "Learning-components"
+          "Rubric"
         ],
         "parameters": [
           {
@@ -385,18 +376,14 @@
       },
       "put": {
         "deprecated": false,
-        "description": "Update a single learning-components record",
+        "description": "Update a record",
         "responses": {
           "200": {
-            "description": "Retrieve learning-components document(s)",
+            "description": "response",
             "content": {
               "application/json": {
                 "schema": {
-                  "properties": {
-                    "foo": {
-                      "type": "string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/Rubric"
                 }
               }
             }
@@ -434,7 +421,7 @@
         },
         "summary": "",
         "tags": [
-          "Learning-components"
+          "Rubric"
         ],
         "requestBody": {
           "description": "",
@@ -442,7 +429,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NewLearning-components"
+                "$ref": "#/components/schemas/NewRubric"
               }
             }
           }
@@ -462,10 +449,10 @@
       },
       "delete": {
         "deprecated": false,
-        "description": "Delete a single learning-components record",
+        "description": "Delete a record",
         "responses": {
           "200": {
-            "description": "deletes a single learning-components based on the ID supplied",
+            "description": "deletes a single record based on the ID supplied",
             "content": {
               "application/json": {
                 "schema": {
@@ -508,7 +495,7 @@
         },
         "summary": "",
         "tags": [
-          "Learning-components"
+          "Rubric"
         ],
         "parameters": [
           {
@@ -527,7 +514,7 @@
   },
   "components": {
     "schemas": {
-      "Learning-components": {
+      "Rubric": {
         "required": [
           "id"
         ],
@@ -535,58 +522,95 @@
           "id": {
             "type": "string"
           },
-          "type": {
+          "title": {
             "type": "string"
           },
-          "activities": {
+          "activity": {
+            "required": [
+              "id",
+              "number",
+              "template"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "lesson_module": {
+                "type": "string"
+              },
+              "number": {
+                "type": "integer"
+              },
+              "template": {
+                "type": "string"
+              },
+              "blocks": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "description": {
+                "type": "string"
+              },
+              "StandardS": {
+                "type": "string"
+              },
+              "images": {
+                "type": "string"
+              },
+              "link": {
+                "type": "string"
+              },
+              "learning_components": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "activity_template": {
+                "type": "string"
+              },
+              "rubric": {
+                "type": "string"
+              },
+              "created_by": {
+                "type": "string"
+              },
+              "updated_by": {
+                "type": "string"
+              }
+            }
+          },
+          "criteria": {
+            "type": "object"
+          },
+          "max_score": {
+            "type": "number"
+          },
+          "scored_rubrics": {
             "type": "array",
             "items": {
               "required": [
-                "id",
-                "number",
-                "template"
+                "id"
               ],
               "properties": {
                 "id": {
                   "type": "string"
                 },
-                "lesson_module": {
+                "submission": {
                   "type": "string"
                 },
-                "number": {
-                  "type": "integer"
+                "score_details": {
+                  "type": "object"
                 },
-                "template": {
+                "total_score": {
+                  "type": "number"
+                },
+                "template_rubric": {
                   "type": "string"
                 },
-                "blocks": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "description": {
-                  "type": "string"
-                },
-                "StandardS": {
-                  "type": "string"
-                },
-                "images": {
-                  "type": "string"
-                },
-                "link": {
-                  "type": "string"
-                },
-                "learning_components": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "activity_template": {
-                  "type": "string"
-                },
-                "rubric": {
+                "published_at": {
                   "type": "string"
                 },
                 "created_by": {
@@ -598,53 +622,31 @@
               }
             }
           },
-          "learning_component_type": {
-            "required": [
-              "id"
-            ],
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "name": {
-                "type": "string"
-              },
-              "learning_components": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "published_at": {
-                "type": "string"
-              },
-              "created_by": {
-                "type": "string"
-              },
-              "updated_by": {
-                "type": "string"
-              }
-            }
-          },
           "published_at": {
             "type": "string",
             "format": "date-time"
           }
         }
       },
-      "NewLearning-components": {
+      "NewRubric": {
         "properties": {
-          "type": {
+          "title": {
             "type": "string"
           },
-          "activities": {
+          "activity": {
+            "type": "string"
+          },
+          "criteria": {
+            "type": "object"
+          },
+          "max_score": {
+            "type": "number"
+          },
+          "scored_rubrics": {
             "type": "array",
             "items": {
               "type": "string"
             }
-          },
-          "learning_component_type": {
-            "type": "string"
           },
           "published_at": {
             "type": "string",
@@ -660,5 +662,9 @@
       }
     }
   },
-  "tags": []
+  "tags": [
+    {
+      "name": "Rubric"
+    }
+  ]
 }

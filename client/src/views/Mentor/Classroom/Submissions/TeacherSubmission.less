@@ -1,0 +1,48 @@
+// This is also ripped from ActivityLevelReport under researcher. I don't even know what a .less file is.
+// - Brody
+
+// Currently this doesn't work as the server doesn't grant access to the grades variable.
+// Upon opening the Gradebook tab, the page crashes and the console shows a 403, so the
+// request to get grades (and likely all subsequent variables) is received but declined.
+// I don't know how to fix this :D
+
+@import '../../../../assets/style.less'; // added more ../, must be a better way!
+
+// Define variables for colors and dimensions
+@lightBlue: #62aadb;
+@barHeight: 50px;
+@sectionWidth: 30%;
+
+// Styles for the bar box
+.submission-menu {
+  background-color: @lightBlue;
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* Align items vertically in the center */
+  height: @barHeight;
+  border-radius: 25px; // Apply border-radius for curved sides
+  overflow: hidden;
+  padding: 0 20px; // Add padding to create buffer space on both sides
+}
+
+// Styles for the sections within the bar box
+.section {
+    flex: 1;
+    width: @sectionWidth;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 0;
+    display: flex;
+    color: #colors[text-secondary];
+    height: auto;
+    background: #colors[secondary];
+    font-size: 1.2em;
+    text-align: center;
+    margin: 0 5px;
+
+}
+
+// Applying styles to individual sections
+.section1, .section2, .section3 {
+  .section;
+}

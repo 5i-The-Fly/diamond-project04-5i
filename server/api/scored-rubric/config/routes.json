@@ -1,0 +1,52 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/scored-rubrics",
+      "handler": "scored-rubric.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/scored-rubrics/count",
+      "handler": "scored-rubric.count",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/scored-rubrics/:id",
+      "handler": "scored-rubric.findOne",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/scored-rubrics",
+      "handler": "scored-rubric.create",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/scored-rubrics/:id",
+      "handler": "scored-rubric.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/scored-rubrics/:id",
+      "handler": "scored-rubric.delete",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}
