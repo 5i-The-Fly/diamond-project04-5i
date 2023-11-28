@@ -197,12 +197,6 @@ export default function TeacherSubmission( { classroomId } ) {
         </Select>
       </div>
 
-      <div className="comment-bar" style={{ marginTop: '100px' }}>
-        <span className="comment-text">Student Comment </span>
-      </div>
-      <div className='Student-comment' style={{ marginTop: '00px', marginBottom: '50px' }}></div>
-      
-
       <div className="top-bar" style={{ marginTop: '50px', display: 'flex', flexDirection:"row" }}>
         <button style={{ marginTop: '10px', marginLeft:'30px'}}> 
           <div className="feedback-button">
@@ -216,13 +210,21 @@ export default function TeacherSubmission( { classroomId } ) {
           </div>
         </button>
       </div>
+  
+      <StudentCanvas activity={activity}/>
 
+      <div className="comment-bar">
+        <span className="comment-text">Student Comment </span>
+      </div>
+      <div className='Student-comment' style={{ marginTop: '00px', marginBottom: '50px' }}></div>
+      
+
+      
 
       <br />
        {showReplayButton()}
        {/* {submission()} */}
        <div>
-       <StudentCanvas activity={activity} />
     </div>
     </div>
     
