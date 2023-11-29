@@ -50,6 +50,10 @@
     "rubric": {
       "via": "activity",
       "model": "rubric"
+    },
+    "scored_rubric": {
+      "via": "activity",
+      "model": "scored-rubric"
     }
   }
 }

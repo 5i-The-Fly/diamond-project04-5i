@@ -946,6 +946,9 @@
                 "overall_score": {
                   "type": "number"
                 },
+                "scored_rubric": {
+                  "type": "string"
+                },
                 "created_by": {
                   "type": "string"
                 },

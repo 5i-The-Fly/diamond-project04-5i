@@ -37,6 +37,10 @@
     },
     "overall_score": {
       "type": "decimal"
+    },
+    "scored_rubric": {
+      "via": "student",
+      "model": "scored-rubric"
     }
   }
 }

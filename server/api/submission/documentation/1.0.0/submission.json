@@ -651,6 +651,9 @@
               "rubric": {
                 "type": "string"
               },
+              "scored_rubric": {
+                "type": "string"
+              },
               "created_by": {
                 "type": "string"
               },
@@ -680,6 +683,12 @@
                 "type": "number"
               },
               "template_rubric": {
+                "type": "string"
+              },
+              "student": {
+                "type": "string"
+              },
+              "activity": {
                 "type": "string"
               },
               "published_at": {

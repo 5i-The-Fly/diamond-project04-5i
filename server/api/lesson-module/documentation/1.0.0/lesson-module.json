@@ -597,6 +597,9 @@
                 "rubric": {
                   "type": "string"
                 },
+                "scored_rubric": {
+                  "type": "string"
+                },
                 "created_by": {
                   "type": "string"
                 },
