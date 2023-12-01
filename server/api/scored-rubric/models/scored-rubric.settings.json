@@ -18,20 +18,20 @@
     "score_details": {
       "type": "json"
     },
-    "total_score": {
+    "totalScore": {
       "type": "decimal"
     },
     "template_rubric": {
       "via": "scored_rubrics",
       "model": "rubric"
     },
-    "student": {
-      "model": "student",
-      "via": "scored_rubric"
-    },
     "activity": {
-      "model": "activity",
-      "via": "scored_rubric"
+      "via": "scored_rubrics",
+      "model": "activity"
+    },
+    "student": {
+      "via": "scored_rubrics",
+      "model": "student"
     }
   }
 }

@@ -15,8 +15,8 @@
       "type": "string"
     },
     "activity": {
-      "model": "activity",
-      "via": "rubric"
+      "via": "rubric",
+      "model": "activity"
     },
     "criteria": {
       "type": "json"

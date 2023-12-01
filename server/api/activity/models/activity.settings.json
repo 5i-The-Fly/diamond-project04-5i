@@ -51,9 +51,12 @@
       "via": "activity",
       "model": "rubric"
     },
-    "scored_rubric": {
+    "scored_rubrics": {
       "via": "activity",
-      "model": "scored-rubric"
+      "collection": "scored-rubric"
+    },
+    "title": {
+      "type": "string"
     }
   }
 }

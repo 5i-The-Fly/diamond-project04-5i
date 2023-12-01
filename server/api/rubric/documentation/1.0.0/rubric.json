@@ -574,7 +574,13 @@
               "rubric": {
                 "type": "string"
               },
-              "scored_rubric": {
+              "scored_rubrics": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "title": {
                 "type": "string"
               },
               "created_by": {
@@ -607,16 +613,16 @@
                 "score_details": {
                   "type": "object"
                 },
-                "total_score": {
+                "totalScore": {
                   "type": "number"
                 },
                 "template_rubric": {
                   "type": "string"
                 },
-                "student": {
+                "activity": {
                   "type": "string"
                 },
-                "activity": {
+                "student": {
                   "type": "string"
                 },
                 "published_at": {
