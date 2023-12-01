@@ -38,9 +38,9 @@
     "overall_score": {
       "type": "decimal"
     },
-    "scored_rubric": {
+    "scored_rubrics": {
       "via": "student",
-      "model": "scored-rubric"
+      "collection": "scored-rubric"
     }
   }
 }

@@ -32,7 +32,7 @@
 // [ ] Totals/average row/column
 // [ ] Override score
 // ---------------------------------------------------------------------------------------------------------
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { Table, Tag, Input, message } from 'antd';
 import MentorSubHeader from '../../../../components/MentorSubHeader/MentorSubHeader';
 import CellButton from './CellButton.jsx'
@@ -42,9 +42,7 @@ import {
   getLessonModule,
   getLessonModuleActivities,
   getClassroom,
-  getSubmissions,
   getScoredRubrics,
-  getSessions,
 } from '../../../../../src/Utils/requests';
 
 
@@ -52,6 +50,7 @@ export default function TeacherGradebook( { classroomId } ) {
   // These are the state variables we need access to. Each are arrays, so [] is put inside useState().
   const [activities, setActivities] = useState([]); 
   const [students, setStudents] = useState([]);
+  const [scoredRubrics, setScoredRubrics] = useState([]);
   const [classSubmissions, setClassSubmissions] = useState([]); // Maps a student and activity pair to an array of submissions. One submission can appear multiple times.
   const [tableData, setTableData] = useState([]);
   const [columns, setColumns] = useState([]);
@@ -147,237 +146,127 @@ export default function TeacherGradebook( { classroomId } ) {
   };
 
 
-  const fetchSubmissionsAndRubrics = async () => {
-    const submissionsResponse = await getSubmissions();
+  const fetchRubrics = async () => {
     const scoredRubricsResponse = await getScoredRubrics();
     
-    if (submissionsResponse.err || scoredRubricsResponse.err) {
-      message.error("Error fetching submissions or scored rubrics");
-      return { submissions: [], scoredRubrics: [] };
+    if (scoredRubricsResponse.err) {
+      message.error("Error fetching scored rubrics");
+      return { scoredRubrics: [] };
     }
+
   
     return {
-      submissions: submissionsResponse.data || [],
       scoredRubrics: scoredRubricsResponse.data || []
     };
   };
 
   
-  const fetchAllSessions = async () => {
-    const response = await getSessions();
-    if (response.err) {
-      message.error("Error fetching sessions");
-      return [];
-    }
-    // console.log("Sessions Response:", response);
-    return response.data || [];
-  };
-  
- 
-  const processStudents = (classroom, allSessions, submissions, scoredRubrics) => {
-    // Log the scoredRubrics data to verify its structure
-    // console.log("Scored Rubrics Data:", scoredRubrics);
-  
-    return classroom.students.map((student) => {
-      const studentSessions = allSessions.filter(session => 
-        session.students.some(s => s.id === student.id)
-      );
-  
-      studentSessions.forEach(session => {
-        // console.log("Session:", session, "Student:", student.name);
-      });
-  
-      return {
-        ...student,
-        sessions: studentSessions.map((session) => {
-          const sessionSubmissions = submissions.filter(submission => 
-            submission.session && submission.session.id === session.id
-          );
 
-          sessionSubmissions.forEach(submission => {
-            // console.log(`Processing Submission ID: ${submission.id}`);
-            const scoredRubric = scoredRubrics.find(rubric => {
-              // console.log(`Checking Rubric:`, rubric, `Submission ID Type: ${typeof submission.id}`, `Rubric Submission ID Type: ${typeof rubric.submission}`);
-              return rubric.submission.id === submission.id;
-            }) || {};
-            // console.log(`Found Scored Rubric for Submission ID ${submission.id}:`, scoredRubric);
-          });
-          
-  
-          // console.log("Session Submissions Before:", sessionSubmissions);
-  
-          const updatedSubmissions = sessionSubmissions.map((submission) => {
-            const scoredRubric = scoredRubrics.find(rubric => rubric.submission.id === submission.id) || {};
-            // Log each submission after attaching scored rubric
-            // console.log("Submission with scored_rubric:", {...submission, scored_rubric: scoredRubric});
-            return {
-              ...submission,
-              scored_rubric: scoredRubric
-            };
-          });
-  
-          // console.log("Session Submissions After:", updatedSubmissions);
-          // console.log("Session:", session, "Student:", student.name)
-  
-          return {
-            ...session,
-            submissions: updatedSubmissions
-          };
-        })
-      };
-    });
-  };
-  
-  
-
-
-  // This function will calculate scores for each student
-  const calculateScoresForStudent = (student, activities) => {
+  const calculateScoresForStudent = (student, activities, scoredRubrics) => {
     let scores = {};
+
+    // console.log("Here are all of the scored Rubrics:", scoredRubrics);
+
+    // console.log("Here are all of the activities:", activities);
+
+    // console.log("Here is the current student:", student);
+  
     activities.forEach(activity => {
-      scores[activity.id] = calculateScore(student, activity);
+      // Find all scoredRubrics for the current student and activity
+      const rubricsForActivity = scoredRubrics.filter(r => r.student.id === student.id && r.activity.id === activity.id);
+      
+      // Find the rubric with the highest total score
+      const bestRubric = rubricsForActivity.reduce((max, rubric) => (rubric.totalScore > max.totalScore ? rubric : max), { totalScore: -1 }); 
+
+      //console.log("The best rubric for student", student.name, "and activity", activity.id, "is", bestRubric);
+      //console.log("The best rubric's total score is", bestRubric.totalScore);
+      //console.log("The activity's max score is", activity.maxScore);
+  
+      // Calculate the score as a percentage of the activity's maximum score
+      let score = bestRubric && bestRubric.totalScore !== -1 ? (bestRubric.totalScore / activity.maxScore) * 100 : 0;
+
+      // Apply conditional rounding
+      if (score < 10) {
+        // For one-digit percentages, round to two decimal places
+        scores[activity.id] = parseFloat(score.toFixed(2));
+      } else if (score >= 100) {
+        // For perfect scores, round to zero decimal places
+        scores[activity.id] = parseFloat(score.toFixed(0));
+      } else {
+        // For two-digit percentages, round to one decimal place
+        scores[activity.id] = parseFloat(score.toFixed(1));
+      }
     });
+  
     return scores;
   };
 
-  // Modify the calculateScore function to properly handle the data
-  const calculateScore = (student, activity) => {
-    // Ensure the sessions are defined and are an array
-    if (!student.sessions || !Array.isArray(student.sessions)) {
-      console.error("Invalid sessions data for student:", student);
-      return 0; // Default score
-    }
-
-    // Log the student and activity being processed
-    //console.log(`Calculating score for Student ID: ${student.id}, Activity ID: ${activity.id}`);
-
-    const submissionsForActivity = student.sessions.flatMap(session => {
-    // Log the submissions in the session
-    //console.log(`Session ID: ${session.id}, Submissions:`, session.submissions);
-
-    return session.submissions.filter(submission => {
-      // Check if submission.activity is not null before accessing id
-      if (submission.activity && submission.activity.id === activity.id) {
-        return true;
-      } else {
-        return false;
-      }
-      });
-    });
-
-    // Log the filtered submissions for the activity
-    //console.log(`Submissions for Activity ID ${activity.id}:`, submissionsForActivity);
-
-    let totalScore = submissionsForActivity.reduce((acc, submission) => 
-      acc + (submission.scored_rubric ? submission.scored_rubric.total_score : 0), 0
-    );
-
-    return totalScore > 0 ? (totalScore / activity.maxScore) * 100 : 91; // Default score if no submissions
-  };
-
-  
-  
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const classroom = await fetchClassroomData(classroomId);
-        if (!classroom) return;;
-  
-        const activitiesWithMaxScores = await fetchActivitiesWithMaxScores(classroom);
-        setActivities(activitiesWithMaxScores);
-
-        // Debugging: Log activities and students
-        //console.log("Activities with Max Scores:", activitiesWithMaxScores);
-        //console.log("Initial Students:", classroom.students);
-  
-        const { submissions, scoredRubrics } = await fetchSubmissionsAndRubrics();
-        const allSessions = await fetchAllSessions();
-        const updatedStudents = processStudents(classroom, allSessions, submissions, scoredRubrics);
-
-        updatedStudents.forEach(student => {
-          student.scores = calculateScoresForStudent(student, activitiesWithMaxScores);
-        });
-
-        setStudents(updatedStudents); // Ensure this is after score calculation
 
 
-        const newColumns = [
-          {
-            title: 'Student',
-            dataIndex: 'name',
-            key: 'name',
-          },
-          ...activities.map(activity => ({
-            key: activity.id,
-            title: `Activity ${activity.number}`,
-            render: (_, student) => {
-              const score = student.scores[activity.id];
-              console.log("Student:", student.name, "Activity:", activity.number, "Score:", score)
-              return (
-                <CellButton 
-                  student={student}
-                  activity={activity}
-                  score={score}
-                />
-              );
-            }
-          }))
-        ];
-    
-        setColumns(newColumns);
-        setTableData(updatedStudents);
+  const updateTableData = (activities, students, scoredRubrics) => {
+    const updatedStudents = students.map(student => ({
+      ...student,
+      scores: calculateScoresForStudent(student, activities, scoredRubrics.scoredRubrics)
+    }));
 
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        message.error("Error fetching classroom data");
-      }
-    };
-  
-    fetchData();
-  }, [classroomId]);
-  
+    //console.log("Updated students:", updatedStudents);
 
-  
-  
-
-
-
- /*
-  const columns = [
-    {
-      title: 'Student',
-      dataIndex: 'name',
-      key: 'name'
-    },
-    ...activities.map(activity => ({
-      key: activity.id,
-      title: `Activity ${activity.number}`,
-      render: (_, student) => {
-        // Safely access the score for the current activity
-        const activityScore = student.scores ? student.scores[activity.id] : null;
-  
-        return (
+    const newColumns = [
+      { title: 'Student', dataIndex: 'name', key: 'name' },
+      ...activities.map(activity => ({
+        key: activity.id,
+        title: `Activity ${activity.number}`,
+        render: (_, student) => (
           <CellButton 
             student={student}
             activity={activity}
-            score={activityScore} // Safely pass the score
+            score={student.scores[activity.id]}
           />
-        );
-      }
-    }))
-  ];
-  
-  
-  const tableData = students.map(student => ({
-    key: student.id,
-    name: student.name,
-    scores: student.scores // Presuming scores are already part of student data
-  }));
+        )
+      }))
+    ];
 
-*/
+    setColumns(newColumns);
+    setTableData(updatedStudents);
+  };
+
+
 
   
+  const fetchData = async () => {
+    try {
+      const classroom = await fetchClassroomData(classroomId);
+      if (!classroom) return;
+
+      const activitiesWithMaxScores = await fetchActivitiesWithMaxScores(classroom);
+      setActivities(activitiesWithMaxScores);
+
+      const scoredRubricsData = await fetchRubrics();
+      setScoredRubrics(scoredRubricsData.scoredRubrics);
+
+      updateTableData(activitiesWithMaxScores, classroom.students, scoredRubricsData);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      message.error("Error fetching classroom data");
+    }
+  };
+  
+
+
+  useEffect(() => {
+    // Initial data fetch
+    fetchData();
+
+    // Set up polling every 3 seconds
+    // Not the most resource efficient, but it is easier to implement than a websocket
+    const intervalId = setInterval(fetchData, 3000);
+
+    // Clean up the interval on component unmount
+    return () => clearInterval(intervalId);
+  }, [classroomId]);
+  
+  
+
 
 
   // for the back button!

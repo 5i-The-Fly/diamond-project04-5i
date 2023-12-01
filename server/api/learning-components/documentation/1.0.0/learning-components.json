@@ -589,7 +589,13 @@
                 "rubric": {
                   "type": "string"
                 },
-                "scored_rubric": {
+                "scored_rubrics": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "title": {
                   "type": "string"
                 },
                 "created_by": {
