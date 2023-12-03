@@ -640,6 +640,15 @@
               "rubric": {
                 "type": "string"
               },
+              "scored_rubrics": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "title": {
+                "type": "string"
+              },
               "created_by": {
                 "type": "string"
               },
@@ -680,6 +689,12 @@
               },
               "overall_score": {
                 "type": "number"
+              },
+              "scored_rubrics": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
               },
               "created_by": {
                 "type": "string"

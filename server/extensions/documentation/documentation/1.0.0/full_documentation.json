@@ -14,7 +14,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "11/16/2023 5:59:53 PM"
+    "x-generation-date": "12/03/2023 6:27:17 PM"
   },
   "x-strapi-config": {
     "path": "/documentation",
@@ -12945,6 +12945,49 @@
                 "type": "string"
               }
             }
+          },
+          "scored_rubrics": {
+            "type": "array",
+            "items": {
+              "required": [
+                "id"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "submission": {
+                  "type": "string"
+                },
+                "score_details": {
+                  "type": "object"
+                },
+                "totalScore": {
+                  "type": "number"
+                },
+                "template_rubric": {
+                  "type": "string"
+                },
+                "activity": {
+                  "type": "string"
+                },
+                "student": {
+                  "type": "string"
+                },
+                "published_at": {
+                  "type": "string"
+                },
+                "created_by": {
+                  "type": "string"
+                },
+                "updated_by": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "title": {
+            "type": "string"
           }
         }
       },
@@ -12991,6 +13034,15 @@
             "type": "string"
           },
           "rubric": {
+            "type": "string"
+          },
+          "scored_rubrics": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "title": {
             "type": "string"
           },
           "created_by": {
@@ -13365,6 +13417,12 @@
                 },
                 "overall_score": {
                   "type": "number"
+                },
+                "scored_rubrics": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "created_by": {
                   "type": "string"
@@ -13778,6 +13836,15 @@
                 "rubric": {
                   "type": "string"
                 },
+                "scored_rubrics": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "title": {
+                  "type": "string"
+                },
                 "created_by": {
                   "type": "string"
                 },
@@ -13915,6 +13982,15 @@
                   "type": "string"
                 },
                 "rubric": {
+                  "type": "string"
+                },
+                "scored_rubrics": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "title": {
                   "type": "string"
                 },
                 "created_by": {
@@ -14259,6 +14335,15 @@
               "rubric": {
                 "type": "string"
               },
+              "scored_rubrics": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "title": {
+                "type": "string"
+              },
               "created_by": {
                 "type": "string"
               },
@@ -14289,10 +14374,16 @@
                 "score_details": {
                   "type": "object"
                 },
-                "total_score": {
+                "totalScore": {
                   "type": "number"
                 },
                 "template_rubric": {
+                  "type": "string"
+                },
+                "activity": {
+                  "type": "string"
+                },
+                "student": {
                   "type": "string"
                 },
                 "published_at": {
@@ -14403,6 +14494,15 @@
               "rubric": {
                 "type": "string"
               },
+              "scored_rubrics": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "title": {
+                "type": "string"
+              },
               "created_by": {
                 "type": "string"
               },
@@ -14443,6 +14543,12 @@
               },
               "overall_score": {
                 "type": "number"
+              },
+              "scored_rubrics": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
               },
               "created_by": {
                 "type": "string"
@@ -14754,7 +14860,7 @@
           "score_details": {
             "type": "object"
           },
-          "total_score": {
+          "totalScore": {
             "type": "number"
           },
           "template_rubric": {
@@ -14794,6 +14900,119 @@
               }
             }
           },
+          "activity": {
+            "required": [
+              "id",
+              "number",
+              "template"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "lesson_module": {
+                "type": "string"
+              },
+              "number": {
+                "type": "integer"
+              },
+              "template": {
+                "type": "string"
+              },
+              "blocks": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "description": {
+                "type": "string"
+              },
+              "StandardS": {
+                "type": "string"
+              },
+              "images": {
+                "type": "string"
+              },
+              "link": {
+                "type": "string"
+              },
+              "learning_components": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "activity_template": {
+                "type": "string"
+              },
+              "rubric": {
+                "type": "string"
+              },
+              "scored_rubrics": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "title": {
+                "type": "string"
+              },
+              "created_by": {
+                "type": "string"
+              },
+              "updated_by": {
+                "type": "string"
+              }
+            }
+          },
+          "student": {
+            "required": [
+              "id",
+              "enrolled"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "character": {
+                "type": "string"
+              },
+              "classroom": {
+                "type": "string"
+              },
+              "sessions": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "enrolled": {
+                "type": "boolean"
+              },
+              "last_logged_in": {
+                "type": "string"
+              },
+              "overall_score": {
+                "type": "number"
+              },
+              "scored_rubrics": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "created_by": {
+                "type": "string"
+              },
+              "updated_by": {
+                "type": "string"
+              }
+            }
+          },
           "published_at": {
             "type": "string",
             "format": "date-time"
@@ -14808,10 +15027,16 @@
           "score_details": {
             "type": "object"
           },
-          "total_score": {
+          "totalScore": {
             "type": "number"
           },
           "template_rubric": {
+            "type": "string"
+          },
+          "activity": {
+            "type": "string"
+          },
+          "student": {
             "type": "string"
           },
           "published_at": {
@@ -15066,6 +15291,12 @@
                 },
                 "overall_score": {
                   "type": "number"
+                },
+                "scored_rubrics": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "created_by": {
                   "type": "string"
@@ -15462,6 +15693,46 @@
           },
           "overall_score": {
             "type": "number"
+          },
+          "scored_rubrics": {
+            "type": "array",
+            "items": {
+              "required": [
+                "id"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "submission": {
+                  "type": "string"
+                },
+                "score_details": {
+                  "type": "object"
+                },
+                "totalScore": {
+                  "type": "number"
+                },
+                "template_rubric": {
+                  "type": "string"
+                },
+                "activity": {
+                  "type": "string"
+                },
+                "student": {
+                  "type": "string"
+                },
+                "published_at": {
+                  "type": "string"
+                },
+                "created_by": {
+                  "type": "string"
+                },
+                "updated_by": {
+                  "type": "string"
+                }
+              }
+            }
           }
         }
       },
@@ -15495,6 +15766,12 @@
           },
           "overall_score": {
             "type": "number"
+          },
+          "scored_rubrics": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "created_by": {
             "type": "string"
@@ -15641,6 +15918,15 @@
               "rubric": {
                 "type": "string"
               },
+              "scored_rubrics": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "title": {
+                "type": "string"
+              },
               "created_by": {
                 "type": "string"
               },
@@ -15666,10 +15952,16 @@
               "score_details": {
                 "type": "object"
               },
-              "total_score": {
+              "totalScore": {
                 "type": "number"
               },
               "template_rubric": {
+                "type": "string"
+              },
+              "activity": {
+                "type": "string"
+              },
+              "student": {
                 "type": "string"
               },
               "published_at": {

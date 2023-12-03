@@ -32,7 +32,7 @@
 // [ ] Totals/average row/column
 // [ ] Override score
 // ---------------------------------------------------------------------------------------------------------
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { Table, Tag, Input, message } from 'antd';
 import MentorSubHeader from '../../../../components/MentorSubHeader/MentorSubHeader';
 import CellButton from './CellButton.jsx'
@@ -42,6 +42,7 @@ import {
   getLessonModule,
   getLessonModuleActivities,
   getClassroom,
+  getScoredRubrics,
 } from '../../../../../src/Utils/requests';
 
 
@@ -49,7 +50,10 @@ export default function TeacherGradebook( { classroomId } ) {
   // These are the state variables we need access to. Each are arrays, so [] is put inside useState().
   const [activities, setActivities] = useState([]); 
   const [students, setStudents] = useState([]);
+  const [scoredRubrics, setScoredRubrics] = useState([]);
   const [classSubmissions, setClassSubmissions] = useState([]); // Maps a student and activity pair to an array of submissions. One submission can appear multiple times.
+  const [tableData, setTableData] = useState([]);
+  const [columns, setColumns] = useState([]);
 
   // useEffect will get us all our necessary state variables methinks.
   // TODO: Is this called every time data is updated? Worried about speed if we're remaking the table every time.
@@ -103,41 +107,166 @@ export default function TeacherGradebook( { classroomId } ) {
 
 
 
-  // Construct columns for table display
-  const columns = [
-    {
-      // first column for the student name
-      title: 'Student',
-      dataIndex: 'studentName',
-      key: 'studentName'
-    },
-    // subsequent columns for each activity
-    ...activities.map((activity) => ({ // '.map()' constructs an array, '...' unpacks it.
-        key: activity.number,
-        title: 'Level ' + activity.number,
-        dataIndex: ['studentSubmissions', activity], // sets cell value equal to tableData[student].studentSubmissions[activity]
-        // Cyrus: New score color scheme
-        render: (activitySubmissions, record) => {
-          return (
-            <CellButton 
-            student={record.student}
-            activity={activity}
-            submissions={activitySubmissions}
-            />
-          );
-      },
-    })),
-  ];
+  const fetchClassroomData = async (classroomId) => {
+    const response = await getClassroom(classroomId);
+    if (!response.data) {
+      message.error(response.err);
+      return null;
+    }
+    return response.data;
+  };
 
-  // Creates tableData for the display. 
-  const tableData = students.map((student, index) => ({
-    key: index, // TODO: figure out a better way to index students, use a student id if it exists.
-    studentName: student.name,
-    studentSubmissions: activities.reduce((accumulate, activity) => {
-      accumulate[activity] = classSubmissions.get(student, activity);
-      return accumulate;
-    }, {}),
-  }));
+  // Fetches all activities for the current lesson module and adds the max score to each activity
+  const fetchActivitiesWithMaxScores = async (classroom) => {
+    const activities = await Promise.all(classroom.selections.map(async (selection) => { 
+      if (selection.current) {
+        const lsRes = await getLessonModule(selection.lesson_module);
+        if (lsRes.data) {
+          const activityRes = await getLessonModuleActivities(lsRes.data.id);
+          if (activityRes.data) {
+            return Promise.all(activityRes.data.map(async (activity) => { 
+              const rubric = activity.rubric;
+              if (!rubric) {
+                console.log("No rubric for activity:", activity.id);
+                return activity;
+              }
+              else {
+                const maxScore = rubric.max_score;
+                return { ...activity, maxScore };
+              }
+            }));
+          }
+        }
+      }
+      return [];
+    }));
+
+    // console.log("Activities:", activities);
+    return activities.flat();
+  };
+
+
+  const fetchRubrics = async () => {
+    const scoredRubricsResponse = await getScoredRubrics();
+    
+    if (scoredRubricsResponse.err) {
+      message.error("Error fetching scored rubrics");
+      return { scoredRubrics: [] };
+    }
+
+  
+    return {
+      scoredRubrics: scoredRubricsResponse.data || []
+    };
+  };
+
+  
+
+  const calculateScoresForStudent = (student, activities, scoredRubrics) => {
+    let scores = {};
+
+    // console.log("Here are all of the scored Rubrics:", scoredRubrics);
+
+    // console.log("Here are all of the activities:", activities);
+
+    // console.log("Here is the current student:", student);
+  
+    activities.forEach(activity => {
+      // Find all scoredRubrics for the current student and activity
+      const rubricsForActivity = scoredRubrics.filter(r => r.student.id === student.id && r.activity.id === activity.id);
+      
+      // Find the rubric with the highest total score
+      const bestRubric = rubricsForActivity.reduce((max, rubric) => (rubric.totalScore > max.totalScore ? rubric : max), { totalScore: -1 }); 
+
+      //console.log("The best rubric for student", student.name, "and activity", activity.id, "is", bestRubric);
+      //console.log("The best rubric's total score is", bestRubric.totalScore);
+      //console.log("The activity's max score is", activity.maxScore);
+  
+      // Calculate the score as a percentage of the activity's maximum score
+      let score = bestRubric && bestRubric.totalScore !== -1 ? (bestRubric.totalScore / activity.maxScore) * 100 : 0;
+
+      // Apply conditional rounding
+      if (score < 10) {
+        // For one-digit percentages, round to two decimal places
+        scores[activity.id] = parseFloat(score.toFixed(2));
+      } else if (score >= 100) {
+        // For perfect scores, round to zero decimal places
+        scores[activity.id] = parseFloat(score.toFixed(0));
+      } else {
+        // For two-digit percentages, round to one decimal place
+        scores[activity.id] = parseFloat(score.toFixed(1));
+      }
+    });
+  
+    return scores;
+  };
+
+
+
+  const updateTableData = (activities, students, scoredRubrics) => {
+    const updatedStudents = students.map(student => ({
+      ...student,
+      scores: calculateScoresForStudent(student, activities, scoredRubrics.scoredRubrics)
+    }));
+
+    //console.log("Updated students:", updatedStudents);
+
+    const newColumns = [
+      { title: 'Student', dataIndex: 'name', key: 'name' },
+      ...activities.map(activity => ({
+        key: activity.id,
+        title: `Activity ${activity.number}`,
+        render: (_, student) => (
+          <CellButton 
+            student={student}
+            activity={activity}
+            score={student.scores[activity.id]}
+          />
+        )
+      }))
+    ];
+
+    setColumns(newColumns);
+    setTableData(updatedStudents);
+  };
+
+
+
+  
+  const fetchData = async () => {
+    try {
+      const classroom = await fetchClassroomData(classroomId);
+      if (!classroom) return;
+
+      const activitiesWithMaxScores = await fetchActivitiesWithMaxScores(classroom);
+      setActivities(activitiesWithMaxScores);
+
+      const scoredRubricsData = await fetchRubrics();
+      setScoredRubrics(scoredRubricsData.scoredRubrics);
+
+      updateTableData(activitiesWithMaxScores, classroom.students, scoredRubricsData);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      message.error("Error fetching classroom data");
+    }
+  };
+  
+
+
+  useEffect(() => {
+    // Initial data fetch
+    fetchData();
+
+    // Set up polling every 3 seconds
+    // Not the most resource efficient, but it is easier to implement than a websocket
+    const intervalId = setInterval(fetchData, 3000);
+
+    // Clean up the interval on component unmount
+    return () => clearInterval(intervalId);
+  }, [classroomId]);
+  
+  
+
 
 
   // for the back button!
