@@ -598,7 +598,7 @@
           "score_details": {
             "type": "object"
           },
-          "total_score": {
+          "totalScore": {
             "type": "number"
           },
           "template_rubric": {
@@ -638,6 +638,119 @@
               }
             }
           },
+          "activity": {
+            "required": [
+              "id",
+              "number",
+              "template"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "lesson_module": {
+                "type": "string"
+              },
+              "number": {
+                "type": "integer"
+              },
+              "template": {
+                "type": "string"
+              },
+              "blocks": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "description": {
+                "type": "string"
+              },
+              "StandardS": {
+                "type": "string"
+              },
+              "images": {
+                "type": "string"
+              },
+              "link": {
+                "type": "string"
+              },
+              "learning_components": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "activity_template": {
+                "type": "string"
+              },
+              "rubric": {
+                "type": "string"
+              },
+              "scored_rubrics": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "title": {
+                "type": "string"
+              },
+              "created_by": {
+                "type": "string"
+              },
+              "updated_by": {
+                "type": "string"
+              }
+            }
+          },
+          "student": {
+            "required": [
+              "id",
+              "enrolled"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "character": {
+                "type": "string"
+              },
+              "classroom": {
+                "type": "string"
+              },
+              "sessions": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "enrolled": {
+                "type": "boolean"
+              },
+              "last_logged_in": {
+                "type": "string"
+              },
+              "overall_score": {
+                "type": "number"
+              },
+              "scored_rubrics": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "created_by": {
+                "type": "string"
+              },
+              "updated_by": {
+                "type": "string"
+              }
+            }
+          },
           "published_at": {
             "type": "string",
             "format": "date-time"
@@ -652,10 +765,16 @@
           "score_details": {
             "type": "object"
           },
-          "total_score": {
+          "totalScore": {
             "type": "number"
           },
           "template_rubric": {
+            "type": "string"
+          },
+          "activity": {
+            "type": "string"
+          },
+          "student": {
             "type": "string"
           },
           "published_at": {

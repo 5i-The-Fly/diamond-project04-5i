@@ -666,6 +666,7 @@ export const createAuthorizedWorkspace = async (
     },
     error: 'Unable to create cc workspace',
   });
+
 export const getAuthorizedWorkspaceToolbox = async (id) =>
   makeRequest({
     method: GET,
@@ -700,3 +701,37 @@ export const getClassroomWorkspace = async (id) =>
     auth: true,
     error: 'Unable to retrive classroom workspaces',
   });
+
+
+
+export const getSubmissions = async () => {
+    return makeRequest({
+      method: 'GET',
+      path: `${server}/submissions`,
+      auth: true,
+      error: 'Submissions could not be retrieved.',
+    });
+  };
+
+  export const getScoredRubrics = async () => {
+    return makeRequest({
+      method: 'GET',
+      path: `${server}/scored-rubrics`,
+      auth: true,
+      error: 'Scored rubrics could not be retrieved.',
+    });
+  };
+
+
+  export const updateScoredRubric = async (scoredRubricId, newScore) =>
+    makeRequest({
+      method: PUT,
+      path: `${server}/scored-rubrics/${scoredRubricId}`,
+      data: {
+        totalScore: newScore,
+      },
+      auth: true,
+      error: 'Failed to update scored rubric score.',
+ });
+
+  

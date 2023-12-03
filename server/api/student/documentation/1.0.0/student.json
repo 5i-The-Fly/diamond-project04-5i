@@ -787,6 +787,46 @@
           },
           "overall_score": {
             "type": "number"
+          },
+          "scored_rubrics": {
+            "type": "array",
+            "items": {
+              "required": [
+                "id"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "submission": {
+                  "type": "string"
+                },
+                "score_details": {
+                  "type": "object"
+                },
+                "totalScore": {
+                  "type": "number"
+                },
+                "template_rubric": {
+                  "type": "string"
+                },
+                "activity": {
+                  "type": "string"
+                },
+                "student": {
+                  "type": "string"
+                },
+                "published_at": {
+                  "type": "string"
+                },
+                "created_by": {
+                  "type": "string"
+                },
+                "updated_by": {
+                  "type": "string"
+                }
+              }
+            }
           }
         }
       },
@@ -820,6 +860,12 @@
           },
           "overall_score": {
             "type": "number"
+          },
+          "scored_rubrics": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "created_by": {
             "type": "string"
