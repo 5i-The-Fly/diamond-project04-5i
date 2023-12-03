@@ -613,15 +613,6 @@
                 "last_logged_in": {
                   "type": "string"
                 },
-                "overall_score": {
-                  "type": "number"
-                },
-                "scored_rubrics": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
                 "created_by": {
                   "type": "string"
                 },
@@ -681,9 +672,6 @@
                 },
                 "job_id": {
                   "type": "integer"
-                },
-                "scored_rubric": {
-                  "type": "string"
                 },
                 "created_by": {
                   "type": "string"

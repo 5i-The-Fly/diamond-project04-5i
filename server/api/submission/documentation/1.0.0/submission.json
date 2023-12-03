@@ -648,18 +648,6 @@
               "activity_template": {
                 "type": "string"
               },
-              "rubric": {
-                "type": "string"
-              },
-              "scored_rubrics": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "title": {
-                "type": "string"
-              },
               "created_by": {
                 "type": "string"
               },
@@ -670,43 +658,6 @@
           },
           "job_id": {
             "type": "integer"
-          },
-          "scored_rubric": {
-            "required": [
-              "id"
-            ],
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "submission": {
-                "type": "string"
-              },
-              "score_details": {
-                "type": "object"
-              },
-              "totalScore": {
-                "type": "number"
-              },
-              "template_rubric": {
-                "type": "string"
-              },
-              "activity": {
-                "type": "string"
-              },
-              "student": {
-                "type": "string"
-              },
-              "published_at": {
-                "type": "string"
-              },
-              "created_by": {
-                "type": "string"
-              },
-              "updated_by": {
-                "type": "string"
-              }
-            }
           }
         }
       },
@@ -756,9 +707,6 @@
           },
           "job_id": {
             "type": "integer"
-          },
-          "scored_rubric": {
-            "type": "string"
           },
           "created_by": {
             "type": "string"
