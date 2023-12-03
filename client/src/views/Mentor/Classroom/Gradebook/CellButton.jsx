@@ -76,24 +76,49 @@ export default function CellButton({ student, activity, score }) {
 
     // Function for dynamic coloring based on score
     function dynamicColoring(editedScore) {
+        console.log("SCORE: ", editedScore);
         if (editedScore === noSubmissionValue) {
             return 'gray';
-        } else if (editedScore >= 95) {
-            return '#008000'; // Dark Green
-        } else if (editedScore >= 90 && editedScore < 95) {
-            return '#32CD32'; // Lime Green
-        } else if (editedScore >= 80 && editedScore < 90) {
-            return '#90EE90'; // Light Green
-        } else if (editedScore >= 70 && editedScore < 80) {
-            return '#FFBF00'; // Amber
-        } else if (editedScore >= 60 && editedScore < 70) {
-            return '#FFA500'; // Orange
-        } else if (editedScore === 0) {
-            return 'grey'; // Grey for ungraded
-        } else {
-            return 'red'; // Red for all other scores
+        }
+        else
+        {
+            //the subtracted value changes what value will be treated as
+            //the midground or yellow for colors, ie. subtracting 0, a 50 would be
+            //yellow and subtracting 20 a 70 will be yellow
+            var scoreUsed = score - 20;
+            var r = 255;
+            var g = 255;
+
+            var offsetColor = 0;
+            if(scoreUsed > 50)
+            {
+                //creates extra green in the rgb value if anywhere above the score for yellow
+                scoreUsed += 10;
+                offsetColor = 3 * (scoreUsed - 50);
+                r = r - offsetColor;
+            }
+            else
+            {
+                offsetColor = 3 * (50 - scoreUsed);
+                g = g - offsetColor;
+            }
+           
+            //creates an RGB string to return, checking if extra characters must be added
+            var retString = '#';
+            if(r < 16)
+                retString += '0';
+            retString += r.toString(16);
+            if(g < 16)
+                retString += '0';
+            retString += g.toString(16);
+            retString += '00';
+
+            return retString;
         }
     }
+    
+    
+    
 
     // Dropdown options for the button
     const items = [
