@@ -1,6 +1,6 @@
 {
   "paths": {
-    "/classrooms": {
+    "/scored-rubrics": {
       "get": {
         "deprecated": false,
         "description": "",
@@ -10,9 +10,10 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Classroom"
+                  "properties": {
+                    "foo": {
+                      "type": "string"
+                    }
                   }
                 }
               }
@@ -51,7 +52,7 @@
         },
         "summary": "",
         "tags": [
-          "Classroom"
+          "Scored-rubric"
         ],
         "parameters": [
           {
@@ -201,72 +202,9 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Classroom"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        },
-        "summary": "",
-        "tags": [
-          "Classroom"
-        ],
-        "requestBody": {
-          "description": "",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NewClassroom"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/classrooms/count": {
-      "get": {
-        "deprecated": false,
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "response",
-            "content": {
-              "application/json": {
-                "schema": {
                   "properties": {
-                    "count": {
-                      "type": "integer"
+                    "foo": {
+                      "type": "string"
                     }
                   }
                 }
@@ -306,12 +244,22 @@
         },
         "summary": "",
         "tags": [
-          "Classroom"
+          "Scored-rubric"
         ],
-        "parameters": []
+        "requestBody": {
+          "description": "",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewScored-rubric"
+              }
+            }
+          }
+        }
       }
     },
-    "/classrooms/student": {
+    "/scored-rubrics/count": {
       "get": {
         "deprecated": false,
         "description": "",
@@ -363,12 +311,12 @@
         },
         "summary": "",
         "tags": [
-          "Classroom"
+          "Scored-rubric"
         ],
         "parameters": []
       }
     },
-    "/classrooms/{id}": {
+    "/scored-rubrics/{id}": {
       "get": {
         "deprecated": false,
         "description": "",
@@ -378,7 +326,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Classroom"
+                  "properties": {
+                    "foo": {
+                      "type": "string"
+                    }
+                  }
                 }
               }
             }
@@ -416,7 +368,7 @@
         },
         "summary": "",
         "tags": [
-          "Classroom"
+          "Scored-rubric"
         ],
         "parameters": [
           {
@@ -440,7 +392,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Classroom"
+                  "properties": {
+                    "foo": {
+                      "type": "string"
+                    }
+                  }
                 }
               }
             }
@@ -478,7 +434,7 @@
         },
         "summary": "",
         "tags": [
-          "Classroom"
+          "Scored-rubric"
         ],
         "requestBody": {
           "description": "",
@@ -486,7 +442,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NewClassroom"
+                "$ref": "#/components/schemas/NewScored-rubric"
               }
             }
           }
@@ -552,7 +508,7 @@
         },
         "summary": "",
         "tags": [
-          "Classroom"
+          "Scored-rubric"
         ],
         "parameters": [
           {
@@ -566,229 +522,86 @@
             }
           }
         ]
-      }
-    },
-    "/classroom/workspaces/{id}": {
-      "get": {
-        "deprecated": false,
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "Retrieve classroom document(s)",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "foo": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        },
-        "summary": "",
-        "tags": [
-          "Classroom"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "",
-            "deprecated": false,
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ]
-      }
-    },
-    "/classrooms/join/{code}": {
-      "get": {
-        "deprecated": false,
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "foo": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        },
-        "summary": "",
-        "tags": [
-          "Classroom"
-        ],
-        "parameters": [
-          {
-            "name": "code",
-            "in": "path",
-            "description": "",
-            "deprecated": false,
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ]
-      },
-      "post": {
-        "deprecated": false,
-        "description": "Create a new record",
-        "responses": {
-          "200": {
-            "description": "response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "foo": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        },
-        "summary": "",
-        "tags": [
-          "Classroom"
-        ],
-        "requestBody": {
-          "description": "",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "properties": {
-                  "foo": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          }
-        }
       }
     }
   },
   "components": {
     "schemas": {
-      "Classroom": {
+      "Scored-rubric": {
         "required": [
-          "id",
-          "code"
+          "id"
         ],
         "properties": {
           "id": {
             "type": "string"
           },
-          "name": {
-            "type": "string"
+          "submission": {
+            "required": [
+              "id",
+              "status",
+              "workspace",
+              "board",
+              "sketch",
+              "sandbox"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              },
+              "workspace": {
+                "type": "string"
+              },
+              "success": {
+                "type": "boolean"
+              },
+              "hex": {
+                "type": "string"
+              },
+              "stdout": {
+                "type": "string"
+              },
+              "stderr": {
+                "type": "string"
+              },
+              "board": {
+                "type": "string"
+              },
+              "sketch": {
+                "type": "string"
+              },
+              "sandbox": {
+                "type": "boolean"
+              },
+              "session": {
+                "type": "string"
+              },
+              "activity": {
+                "type": "string"
+              },
+              "job_id": {
+                "type": "integer"
+              },
+              "scored_rubric": {
+                "type": "string"
+              },
+              "created_by": {
+                "type": "string"
+              },
+              "updated_by": {
+                "type": "string"
+              }
+            }
           },
-          "school": {
+          "score_details": {
+            "type": "object"
+          },
+          "totalScore": {
+            "type": "number"
+          },
+          "template_rubric": {
             "required": [
               "id"
             ],
@@ -796,26 +609,26 @@
               "id": {
                 "type": "string"
               },
-              "name": {
+              "title": {
                 "type": "string"
               },
-              "county": {
+              "activity": {
                 "type": "string"
               },
-              "state": {
-                "type": "string"
+              "criteria": {
+                "type": "object"
               },
-              "classrooms": {
+              "max_score": {
+                "type": "number"
+              },
+              "scored_rubrics": {
                 "type": "array",
                 "items": {
                   "type": "string"
                 }
               },
-              "mentors": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
+              "published_at": {
+                "type": "string"
               },
               "created_by": {
                 "type": "string"
@@ -825,149 +638,76 @@
               }
             }
           },
-          "sessions": {
-            "type": "array",
-            "items": {
-              "required": [
-                "id"
-              ],
-              "properties": {
-                "id": {
-                  "type": "string"
-                },
-                "classroom": {
-                  "type": "string"
-                },
-                "students": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "submissions": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "saves": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "unit": {
-                  "type": "string"
-                },
-                "grade": {
-                  "type": "string"
-                },
-                "lesson_module": {
-                  "type": "string"
-                },
-                "created_by": {
-                  "type": "string"
-                },
-                "updated_by": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "mentors": {
-            "type": "array",
-            "items": {
-              "required": [
-                "id"
-              ],
-              "properties": {
-                "id": {
-                  "type": "string"
-                },
-                "first_name": {
-                  "type": "string"
-                },
-                "last_name": {
-                  "type": "string"
-                },
-                "school": {
-                  "type": "string"
-                },
-                "classrooms": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "user": {
-                  "type": "string"
-                },
-                "created_by": {
-                  "type": "string"
-                },
-                "updated_by": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "students": {
-            "type": "array",
-            "items": {
-              "required": [
-                "id",
-                "enrolled"
-              ],
-              "properties": {
-                "id": {
-                  "type": "string"
-                },
-                "name": {
-                  "type": "string"
-                },
-                "character": {
-                  "type": "string"
-                },
-                "classroom": {
-                  "type": "string"
-                },
-                "sessions": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "enrolled": {
-                  "type": "boolean"
-                },
-                "last_logged_in": {
-                  "type": "string"
-                },
-                "overall_score": {
-                  "type": "number"
-                },
-                "scored_rubrics": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "created_by": {
-                  "type": "string"
-                },
-                "updated_by": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "code": {
-            "type": "string"
-          },
-          "grade": {
+          "activity": {
             "required": [
               "id",
-              "name"
+              "number",
+              "template"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "lesson_module": {
+                "type": "string"
+              },
+              "number": {
+                "type": "integer"
+              },
+              "template": {
+                "type": "string"
+              },
+              "blocks": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "description": {
+                "type": "string"
+              },
+              "StandardS": {
+                "type": "string"
+              },
+              "images": {
+                "type": "string"
+              },
+              "link": {
+                "type": "string"
+              },
+              "learning_components": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "activity_template": {
+                "type": "string"
+              },
+              "rubric": {
+                "type": "string"
+              },
+              "scored_rubrics": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "title": {
+                "type": "string"
+              },
+              "created_by": {
+                "type": "string"
+              },
+              "updated_by": {
+                "type": "string"
+              }
+            }
+          },
+          "student": {
+            "required": [
+              "id",
+              "enrolled"
             ],
             "properties": {
               "id": {
@@ -976,13 +716,28 @@
               "name": {
                 "type": "string"
               },
-              "classrooms": {
+              "character": {
+                "type": "string"
+              },
+              "classroom": {
+                "type": "string"
+              },
+              "sessions": {
                 "type": "array",
                 "items": {
                   "type": "string"
                 }
               },
-              "units": {
+              "enrolled": {
+                "type": "boolean"
+              },
+              "last_logged_in": {
+                "type": "string"
+              },
+              "overall_score": {
+                "type": "number"
+              },
+              "scored_rubrics": {
                 "type": "array",
                 "items": {
                   "type": "string"
@@ -996,83 +751,35 @@
               }
             }
           },
-          "selections": {
-            "type": "array",
-            "items": {
-              "required": [
-                "id",
-                "current"
-              ],
-              "properties": {
-                "id": {
-                  "type": "string"
-                },
-                "classroom": {
-                  "type": "string"
-                },
-                "lesson_module": {
-                  "type": "string"
-                },
-                "current": {
-                  "type": "boolean"
-                },
-                "created_by": {
-                  "type": "string"
-                },
-                "updated_by": {
-                  "type": "string"
-                }
-              }
-            }
+          "published_at": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
-      "NewClassroom": {
-        "required": [
-          "code"
-        ],
+      "NewScored-rubric": {
         "properties": {
-          "name": {
+          "submission": {
             "type": "string"
           },
-          "school": {
+          "score_details": {
+            "type": "object"
+          },
+          "totalScore": {
+            "type": "number"
+          },
+          "template_rubric": {
             "type": "string"
           },
-          "sessions": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "mentors": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "students": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "code": {
+          "activity": {
             "type": "string"
           },
-          "grade": {
+          "student": {
             "type": "string"
           },
-          "selections": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "authorized_workspaces": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+          "published_at": {
+            "type": "string",
+            "format": "date-time"
           },
           "created_by": {
             "type": "string"
@@ -1084,9 +791,5 @@
       }
     }
   },
-  "tags": [
-    {
-      "name": "Classroom"
-    }
-  ]
+  "tags": []
 }

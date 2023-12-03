@@ -46,6 +46,17 @@
     "activity_template": {
       "type": "text",
       "required": false
+    },
+    "rubric": {
+      "via": "activity",
+      "model": "rubric"
+    },
+    "scored_rubrics": {
+      "via": "activity",
+      "collection": "scored-rubric"
+    },
+    "title": {
+      "type": "string"
     }
   }
 }

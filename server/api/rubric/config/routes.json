@@ -1,0 +1,52 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/rubrics",
+      "handler": "rubric.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/rubrics/count",
+      "handler": "rubric.count",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/rubrics/:id",
+      "handler": "rubric.findOne",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/rubrics",
+      "handler": "rubric.create",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/rubrics/:id",
+      "handler": "rubric.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/rubrics/:id",
+      "handler": "rubric.delete",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}

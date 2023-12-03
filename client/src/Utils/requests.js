@@ -146,6 +146,34 @@ export const getStudent = async (id) =>
     error: 'Student info could not be retrieved.',
   });
 
+// GET request for submission scores
+const getSubmissionScore = async (submissionId) => {
+  return makeRequest({
+    method: 'GET',
+    path: `/submissions/${submissionId}/score`,
+    auth: true
+  });
+};
+
+// POST request for submission scores
+const postSubmissionScore = async (submissionId, score) => {
+  return makeRequest({
+    method: 'POST',
+    path: `/submissions/${submissionId}/score`,
+    data: { score },
+    auth: true
+  });
+};
+
+// GET request for student overall scores
+const getStudentOverallScore = async (studentId, classroomId) => {
+  return makeRequest({
+    method: 'GET',
+    path: `/students/${studentId}/overall_score`,
+    auth: true
+  });
+};
+
 export const postJoin = async (code, ids) =>
   makeRequest({
     method: POST,
@@ -638,6 +666,7 @@ export const createAuthorizedWorkspace = async (
     },
     error: 'Unable to create cc workspace',
   });
+
 export const getAuthorizedWorkspaceToolbox = async (id) =>
   makeRequest({
     method: GET,
@@ -672,3 +701,37 @@ export const getClassroomWorkspace = async (id) =>
     auth: true,
     error: 'Unable to retrive classroom workspaces',
   });
+
+
+
+export const getSubmissions = async () => {
+    return makeRequest({
+      method: 'GET',
+      path: `${server}/submissions`,
+      auth: true,
+      error: 'Submissions could not be retrieved.',
+    });
+  };
+
+  export const getScoredRubrics = async () => {
+    return makeRequest({
+      method: 'GET',
+      path: `${server}/scored-rubrics`,
+      auth: true,
+      error: 'Scored rubrics could not be retrieved.',
+    });
+  };
+
+
+  export const updateScoredRubric = async (scoredRubricId, newScore) =>
+    makeRequest({
+      method: PUT,
+      path: `${server}/scored-rubrics/${scoredRubricId}`,
+      data: {
+        totalScore: newScore,
+      },
+      auth: true,
+      error: 'Failed to update scored rubric score.',
+ });
+
+  
