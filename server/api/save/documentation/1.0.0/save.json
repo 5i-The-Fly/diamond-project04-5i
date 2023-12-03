@@ -637,6 +637,18 @@
               "activity_template": {
                 "type": "string"
               },
+              "rubric": {
+                "type": "string"
+              },
+              "scored_rubrics": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "title": {
+                "type": "string"
+              },
               "created_by": {
                 "type": "string"
               },
@@ -674,6 +686,15 @@
               },
               "last_logged_in": {
                 "type": "string"
+              },
+              "overall_score": {
+                "type": "number"
+              },
+              "scored_rubrics": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
               },
               "created_by": {
                 "type": "string"
