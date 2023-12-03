@@ -61,6 +61,7 @@ export default function TeacherSubmission( { classroomId } ) {
   const [students, setStudents] = useState([]);
   const [activeLessonModule, setActiveLessonModule] = useState(null); // TODO: not sure if this is needed beyond getting activities, could be const?
   const [activity, setActivity ] = useState({});
+  const [selectedStudent, setStudent] = useState({});
 
   // From Researcher ActivityLevelReportView
   const [session, setSession] = useState({});
@@ -120,18 +121,25 @@ export default function TeacherSubmission( { classroomId } ) {
 
     // for changing students in the dropdown
     const changeStudent = (selectedValue) => {
-      const selectedStudent = selectedValue;
+      students.forEach((student) => {
+       if (student.name.includes(selectedValue)) {
+        const currentStudent = getStudent(student.id);
+        setStudent(currentStudent.data);
+        console.log(selectedStudent);
+       }
+      })
+      setSession(selectedStudent.sessions[0]);
+      console.log(session);
 
-      setSession(classroom.sessions[0]);
+     }
 
-    }
 
     const changeActivity = (selectedValue) => {
       // Extract the activity number from the selected value (e.g., "Activity 1" -> "1")
       const activityNumber = parseInt(selectedValue.split(' ')[1]);
     
       // Find the activity with the matching number
-      const selectedActivity = [activityNumber -1];
+      const selectedActivity = activities[activityNumber -1];
     
       if (selectedActivity) {
         setActivity(selectedActivity);
@@ -190,7 +198,7 @@ export default function TeacherSubmission( { classroomId } ) {
           {/* Add other options related to students if needed */}
         </Select>
 
-        <Select defaultValue="Class" className="section">
+        <Select defaultValue={classroom.name} className="section">
           {/* Dropdown menu for Class section */}
             <Option key ={classroomId} value={classroom.name}/>
           {/* Add other options related to class if needed */}
@@ -219,7 +227,7 @@ export default function TeacherSubmission( { classroomId } ) {
       <div className='Student-comment' style={{ marginTop: '00px', marginBottom: '50px' }}></div>
       
       <br />
-       {showReplayButton()}
+       {/* {showReplayButton()} */}
        {/* {submission()} */}
        <div>
     </div>
