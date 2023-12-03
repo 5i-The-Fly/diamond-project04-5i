@@ -131,7 +131,7 @@ export default function TeacherSubmission( { classroomId } ) {
       const activityNumber = parseInt(selectedValue.split(' ')[1]);
     
       // Find the activity with the matching number
-      const selectedActivity = activities[activityNumber -1];
+      const selectedActivity = [activityNumber -1];
     
       if (selectedActivity) {
         setActivity(selectedActivity);
@@ -218,17 +218,11 @@ export default function TeacherSubmission( { classroomId } ) {
       </div>
       <div className='Student-comment' style={{ marginTop: '00px', marginBottom: '50px' }}></div>
       
-
-      
-
       <br />
        {showReplayButton()}
        {/* {submission()} */}
        <div>
     </div>
     </div>
-    
-
-    
     );
 }
