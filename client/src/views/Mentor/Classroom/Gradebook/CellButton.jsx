@@ -24,25 +24,7 @@ export default function CellButton({ student, activity, score }) {
     }, [score]);
 
 
-    /*
-    // Function to calculate display score from submissions
-    function calculateDisplayScore(submissions) {
-        if (!submissions || submissions.length === 0) {
-            return noSubmissionValue;
-        }
 
-        let totalScore = submissions.reduce((acc, submission) => 
-            acc + (submission.scored_rubric ? submission.scored_rubric.total_score : 0), 0
-        );
-        
-        // Assuming maxScore is a known value or a prop
-        const maxScore = activity.maxScore || 100;
-        let averageScore = totalScore / submissions.length;
-
-        return totalScore > 0 ? (averageScore / maxScore) * 100 : 91; // Default score if no submissions
-    }
-
-    */
 
 
     // Modify getDisplayScore to use editedScore
@@ -55,16 +37,33 @@ export default function CellButton({ student, activity, score }) {
     const handleScoreSave = async (e) => {
         if (e.type === 'blur' || (e.type === 'keydown' && e.key === 'Enter')) {
             setIsCellEditMode(false);
-            
-            // Assuming that the scoredRubric object contains an id
-            const scoredRubricId = student.scoredRubricId; // Update this based on your data structure
-            try {
-                // Call the API function to update the score
-                await updateScoredRubric(scoredRubricId, editedScore);
-                message.success('Score updated successfully');
-            } catch (error) {
-                message.error('Failed to update score');
-                console.error('Error updating score:', error);
+    
+            // Filter scoredRubrics for the current student and activity, then find the one with the highest score
+            const scoredRubricsForStudent = activity.scored_rubrics
+                .filter(r => r.student === student.id && r.activity === activity.id);
+
+            // Student may have more than one scoredRubric for the same activity, so we need to find the one with the highest score, because this is what is in the gradebook
+            const highestScoredRubric = scoredRubricsForStudent.reduce((max, rubric) => (rubric.totalScore > max.totalScore ? rubric : max), { totalScore: -1 });
+
+            console.log("Highest Scored Rubric: ", highestScoredRubric);
+    
+            const scoredRubricId = highestScoredRubric.id;
+
+            console.log("Scored Rubric ID: ", scoredRubricId);
+
+    
+            if (scoredRubricId) {
+                try {
+                    // Call the API function to update the score
+                    await updateScoredRubric(scoredRubricId, editedScore);
+                    message.success('Score updated successfully');
+                } catch (error) {
+                    message.error('Failed to update score');
+                    console.error('Error updating score:', error);
+                }
+            } else {
+                console.error('No matching scoredRubric found');
+                message.error('Could not update score: No matching scoredRubric found');
             }
         }
     };
