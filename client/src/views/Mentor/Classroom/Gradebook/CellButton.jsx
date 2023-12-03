@@ -76,44 +76,32 @@ export default function CellButton({ student, activity, score }) {
 
     // Function for dynamic coloring based on score
     function dynamicColoring(editedScore) {
-        console.log("SCORE: ", editedScore);
         if (editedScore === noSubmissionValue) {
             return 'gray';
-        }
-        else
-        {
-            //the subtracted value changes what value will be treated as
-            //the midground or yellow for colors, ie. subtracting 0, a 50 would be
-            //yellow and subtracting 20 a 70 will be yellow
-            var scoreUsed = score - 20;
-            var r = 255;
-            var g = 255;
-
-            var offsetColor = 0;
-            if(scoreUsed > 50)
-            {
-                //creates extra green in the rgb value if anywhere above the score for yellow
-                scoreUsed += 10;
-                offsetColor = 3 * (scoreUsed - 50);
-                r = r - offsetColor;
+        } else {
+            let color;
+            if (editedScore >= 80) {
+                // Greenish colors, darker for higher scores
+                const greenIntensity = 255 - ((editedScore - 80) * (255 - 102) / 20);
+                color = `rgb(0, ${Math.max(greenIntensity, 102)}, 0)`;
+            } else if (editedScore >= 70) {
+                // Brighter yellow as we approach 80
+                const transitionFactor = (editedScore - 70) / 10;
+                const yellowRedIntensity = 255; // Full red component for bright yellow
+                const yellowGreenIntensity = 165 + transitionFactor * (255 - 165); // Increase green for brighter yellow
+                color = `rgb(${yellowRedIntensity}, ${yellowGreenIntensity}, 0)`;
+            } else if (editedScore >= 60) {
+                // Orangeish colors, darker for lower scores
+                const transitionFactor = (70 - editedScore) / 10;
+                const orangeRedIntensity = 255;
+                const orangeGreenIntensity = 140 + transitionFactor * (165 - 140);
+                color = `rgb(${orangeRedIntensity}, ${orangeGreenIntensity}, 0)`;
+            } else {
+                // Reddish colors, darker for lower scores
+                const redIntensity = 139 + ((editedScore / 60) * (255 - 139));
+                color = `rgb(${Math.min(redIntensity, 255)}, 0, 0)`;
             }
-            else
-            {
-                offsetColor = 3 * (50 - scoreUsed);
-                g = g - offsetColor;
-            }
-           
-            //creates an RGB string to return, checking if extra characters must be added
-            var retString = '#';
-            if(r < 16)
-                retString += '0';
-            retString += r.toString(16);
-            if(g < 16)
-                retString += '0';
-            retString += g.toString(16);
-            retString += '00';
-
-            return retString;
+            return color;
         }
     }
     
