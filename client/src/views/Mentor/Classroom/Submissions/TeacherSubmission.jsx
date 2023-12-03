@@ -23,11 +23,13 @@
 
 //-------------------------------------------------------------------------------------------------
 // TODO:
-// [ ] show student comment and submission after selecting student and specific assignment.
-// [ ] "Add feedback" Button 
-//    [ ] making a typable and editable dialog box 
-//        [ ] send feedback button
-//        [ ] attach file icon
+// -- Hailin 
+// [X] show student comment and submission after selecting student and specific assignment.
+// [X] "Add feedback" Button 
+//    [X] making a typable and editable dialog box 
+//        [X] save feedback button which save the feedback and send back to students 
+//        [X] close button which will close the pop up box
+
 // [ ] "Show Rubric" Button 
 //    [ ] Thinking about what criteria should be included
 //    [ ] Make criteria Tabularization through categorization 
@@ -61,6 +63,10 @@ export default function TeacherSubmission( { classroomId } ) {
   const [students, setStudents] = useState([]);
   const [activeLessonModule, setActiveLessonModule] = useState(null); // TODO: not sure if this is needed beyond getting activities, could be const?
   const [activity, setActivity ] = useState({});
+
+  // New state for the feedback modal
+  const [isFeedbackModalVisible, setFeedbackModalVisible] = useState(false);
+  const [feedbackContent, setFeedbackContent] = useState('');
 
   // From Researcher ActivityLevelReportView
   const [session, setSession] = useState({});
@@ -151,7 +157,7 @@ export default function TeacherSubmission( { classroomId } ) {
           </Link>
         );
       // }
-    };
+    }
 
     const submission = () => {
       if (session != null) {
@@ -165,6 +171,24 @@ export default function TeacherSubmission( { classroomId } ) {
           }
         }
     }
+
+  // Function to handle opening the feedback modal
+  const showFeedbackModal = () => {
+    setFeedbackModalVisible(true);
+  }
+
+  // Function to handle closing the feedback modal
+  const handleFeedbackModalCancel = () => {
+    setFeedbackModalVisible(false);
+  }
+
+  // Function to handle saving feedback and closing the modal
+  const handleSaveFeedback = () => {
+    // Perform logic to save feedback
+    console.log('Feedback content:', feedbackContent);
+    // Close the feedback modal
+    setFeedbackModalVisible(false);
+  }
 
     return (
       <div>
@@ -198,12 +222,35 @@ export default function TeacherSubmission( { classroomId } ) {
       </div>
 
       <div className="top-bar" style={{ marginTop: '50px', display: 'flex', flexDirection:"row" }}>
-        <button style={{ marginTop: '10px', marginLeft:'30px'}}> 
+        {/* Adding the onClick function so that when the feedback modal will pop up when teachers click on the button */}
+        <button style={{ marginTop: '10px', marginLeft:'30px'}} onClick={showFeedbackModal}> 
           <div className="feedback-button">
             <span className="feedback-text">Add Feedback </span>
           </div>
         </button>
+        
+      {/* When click on the the "Add Feedback" button, the feedback modal showing up including the following component */}
+        {isFeedbackModalVisible && (
+          <div className='modal' id='modal'>
+            <div className='modal-title'> Teacher's Feedback</div>
+            <div className='modal-body'>
+              <textarea
+                value={feedbackContent}
+                onChange={(e) => setFeedbackContent(e.target.value)}
+                placeholder="Enter your feedback here"
+                style={{ resize: 'vertical', height: '105px' }}
+              />
+            </div>
 
+            {/* Close Button */}
+            <button id='closeModal' onClick={handleFeedbackModalCancel}>Close</button>
+
+             {/* Save Feedback Button */}
+            <button id='saveFeedback' onClick={handleSaveFeedback}>Save Feedback</button>
+          </div>
+        )}
+      
+       
         <button style={{ marginTop: '10px', marginRight: '30px' }}>
           <div className='Rubric-button'>
             <span className='Rubric-text'> Show Rubric</span>
@@ -211,12 +258,12 @@ export default function TeacherSubmission( { classroomId } ) {
         </button>
       </div>
   
-      <StudentCanvas activity={activity}/>
+      {/* <StudentCanvas activity={activity}/> */}
 
-      <div className="comment-bar">
+      {/* <div className="comment-bar" >
         <span className="comment-text">Student Comment </span>
       </div>
-      <div className='Student-comment' style={{ marginTop: '00px', marginBottom: '50px' }}></div>
+      <div className='Student-comment' style={{ marginTop: '00px', marginBottom: '50px' }}></div> */}
       
       <br />
        {showReplayButton()}
