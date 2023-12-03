@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Dropdown, Input, Menu, message } from "antd";
 import { UserOutlined } from '@ant-design/icons';
+import {
+    updateScoredRubric,
+  } from '../../../../../src/Utils/requests';
 
 export default function CellButton({ student, activity, score }) {
     // Default values for different states
@@ -9,7 +12,7 @@ export default function CellButton({ student, activity, score }) {
 
     //console.log("!!!!!SCORES: ", score);
 
-    console.log("CellButton: ", student, activity, score);
+    //console.log("CellButton: ", student, activity, score);
 
 
     // Local state to store the edited score and track edit mode
@@ -49,12 +52,19 @@ export default function CellButton({ student, activity, score }) {
 
 
     // Function to handle score change and exit edit mode
-    const handleScoreSave = (e) => {
+    const handleScoreSave = async (e) => {
         if (e.type === 'blur' || (e.type === 'keydown' && e.key === 'Enter')) {
             setIsCellEditMode(false);
-            if (onScoreChange) {
-                //onScoreChange(student, activity, editedScore);
-                // TODO: Implement the logic to update the score in the backend
+            
+            // Assuming that the scoredRubric object contains an id
+            const scoredRubricId = student.scoredRubricId; // Update this based on your data structure
+            try {
+                // Call the API function to update the score
+                await updateScoredRubric(scoredRubricId, editedScore);
+                message.success('Score updated successfully');
+            } catch (error) {
+                message.error('Failed to update score');
+                console.error('Error updating score:', error);
             }
         }
     };
@@ -67,7 +77,6 @@ export default function CellButton({ student, activity, score }) {
 
     // Function for dynamic coloring based on score
     function dynamicColoring(editedScore) {
-        console.log("SCORE: ", editedScore);
         if (editedScore === noSubmissionValue) {
             return 'gray';
         } else if (editedScore >= 95) {

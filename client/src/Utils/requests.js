@@ -721,4 +721,15 @@ export const getSubmissions = async () => {
     });
   };
 
+
+  export const updateScoredRubric = async (scoredRubricId, newScore) =>
+  makeRequest({
+    method: POST,
+    path: `${server}/scored-rubrics/${scoredRubricId}`,
+    data: {
+      totalScore: newScore, 
+    },
+    auth: true,
+    error: 'Failed to update scored rubric score.',
+  });
   
