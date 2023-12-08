@@ -46,7 +46,7 @@ Mentors use the `local` provider routes, `/auth/local` and `/auth/local/register
 ### Entity Relationships
 
 <!--![ER Digram](er_diagram.PNG)>-->
-![casmm_architecture](./admin/src/assets/images/NewERDiagram.png)
+![casmm_architecture](./admin/src/assets/images/UpdatedERDiagram.png)
 
 
 ### Endpoints
