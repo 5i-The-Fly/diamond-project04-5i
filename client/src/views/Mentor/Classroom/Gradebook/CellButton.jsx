@@ -40,14 +40,9 @@ export default function CellButton({ student, activity, score }) {
 
             // Student may have more than one scoredRubric for the same activity, so we need to find the one with the highest score, because this is what is in the gradebook
             const highestScoredRubric = scoredRubricsForStudent.reduce((max, rubric) => (rubric.totalScore > max.totalScore ? rubric : max), { totalScore: -1 });
-
-            console.log("Highest Scored Rubric: ", highestScoredRubric);
     
             const scoredRubricId = highestScoredRubric.id;
 
-            console.log("Scored Rubric ID: ", scoredRubricId);
-
-    
             if (scoredRubricId) {
                 try {
                     // Call the API function to update the score
@@ -131,7 +126,7 @@ export default function CellButton({ student, activity, score }) {
         <Input
             type="number"
             value={editedScore}
-            onChange={(e) => setEditedScore(Number(e.target.value))}
+            onChange={(e) => setEditedScore(Math.min(Number(e.target.value), activity.rubric.max_score))} // Edited score cannot exceed the maximum score for the activity
             onBlur={handleScoreSave}
             onKeyDown={handleScoreSave}
             autoFocus
