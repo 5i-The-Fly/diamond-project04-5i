@@ -10,10 +10,6 @@ export default function CellButton({ student, activity, score }) {
     const noSubmissionValue = "-";
     const ungradedValue = "Grade Pending";
 
-    //console.log("!!!!!SCORES: ", score);
-
-    //console.log("CellButton: ", student, activity, score);
-
 
     // Local state to store the edited score and track edit mode
     const [isCellEditMode, setIsCellEditMode] = useState(false);
@@ -120,19 +116,6 @@ export default function CellButton({ student, activity, score }) {
             label: 'View submission',
             key: '2',
             icon: <UserOutlined />,
-        },
-        {
-            label: '3rd menu item',
-            key: '3',
-            icon: <UserOutlined />,
-            danger: true,
-        },
-        {
-            label: '4th menu item',
-            key: '4',
-            icon: <UserOutlined />,
-            danger: true,
-            disabled: true,
         },
         ];
     

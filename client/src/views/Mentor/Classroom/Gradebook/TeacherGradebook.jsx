@@ -18,22 +18,22 @@
 //        - Key: Student, activity
 //        - Value: Submission[]
 // [ ] Button component
-//    [ ] Color based on display score
-//    [ ] Send to submission tab
-//    [ ] Send to specific submissions
-// [ ] Edit grades state and toggle button
-//    [ ] Make state for edit mode
-//    [ ] Create the toggle button
-//    [ ] Make the button change the state of the input cells
+//    [x] Color based on display score
+//    [x] Send to submission tab
+//    [x] Send to specific submissions
+// [x] Edit grades state and toggle button
+//    [x] Make state for edit mode
+//    [x] Create the toggle button
+//    [x] Make the button change the state of the input cells
 // [x] Display score
 //    [x] Default value for tetsts
 //    [x] If submission doesn't exist, display '-'
-// [ ] Get display score from the actual rubric (modify getDisplayScore function)
+// [x] Get display score from the actual rubric (modify getDisplayScore function)
 // [ ] Totals/average row/column
-// [ ] Override score
+// [x] Override score
 // ---------------------------------------------------------------------------------------------------------
-import React, { useEffect, useState, useMemo } from 'react';
-import { Table, Tag, Input, message } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Table, message } from 'antd';
 import MentorSubHeader from '../../../../components/MentorSubHeader/MentorSubHeader';
 import CellButton from './CellButton.jsx'
 import './TeacherGradebook.less'
@@ -54,9 +54,6 @@ export default function TeacherGradebook( { classroomId } ) {
   const [classSubmissions, setClassSubmissions] = useState([]); // Maps a student and activity pair to an array of submissions. One submission can appear multiple times.
   const [tableData, setTableData] = useState([]);
   const [columns, setColumns] = useState([]);
-
-  // useEffect will get us all our necessary state variables methinks.
-  // TODO: Is this called every time data is updated? Worried about speed if we're remaking the table every time.
 
   useEffect(() => {
     // Get the classroom from our input id
@@ -121,11 +118,14 @@ export default function TeacherGradebook( { classroomId } ) {
     const activities = await Promise.all(classroom.selections.map(async (selection) => { 
       if (selection.current) {
         const lsRes = await getLessonModule(selection.lesson_module);
+
         if (lsRes.data) {
           const activityRes = await getLessonModuleActivities(lsRes.data.id);
+
           if (activityRes.data) {
             return Promise.all(activityRes.data.map(async (activity) => { 
               const rubric = activity.rubric;
+              
               if (!rubric) {
                 console.log("No rubric for activity:", activity.id);
                 return activity;
@@ -141,7 +141,6 @@ export default function TeacherGradebook( { classroomId } ) {
       return [];
     }));
 
-    // console.log("Activities:", activities);
     return activities.flat();
   };
 
@@ -164,12 +163,6 @@ export default function TeacherGradebook( { classroomId } ) {
 
   const calculateScoresForStudent = (student, activities, scoredRubrics) => {
     let scores = {};
-
-    // console.log("Here are all of the scored Rubrics:", scoredRubrics);
-
-    // console.log("Here are all of the activities:", activities);
-
-    // console.log("Here is the current student:", student);
   
     activities.forEach(activity => {
       // Find all scoredRubrics for the current student and activity
@@ -177,10 +170,6 @@ export default function TeacherGradebook( { classroomId } ) {
       
       // Find the rubric with the highest total score
       const bestRubric = rubricsForActivity.reduce((max, rubric) => (rubric.totalScore > max.totalScore ? rubric : max), { totalScore: -1 }); 
-
-      //console.log("The best rubric for student", student.name, "and activity", activity.id, "is", bestRubric);
-      //console.log("The best rubric's total score is", bestRubric.totalScore);
-      //console.log("The activity's max score is", activity.maxScore);
   
       // Calculate the score as a percentage of the activity's maximum score
       let score = bestRubric && bestRubric.totalScore !== -1 ? (bestRubric.totalScore / activity.maxScore) * 100 : 0;
@@ -208,8 +197,6 @@ export default function TeacherGradebook( { classroomId } ) {
       ...student,
       scores: calculateScoresForStudent(student, activities, scoredRubrics.scoredRubrics)
     }));
-
-    //console.log("Updated students:", updatedStudents);
 
     const newColumns = [
       { title: 'Student', dataIndex: 'name', key: 'name' },
@@ -287,7 +274,7 @@ export default function TeacherGradebook( { classroomId } ) {
         <Table
         columns = {columns}
         dataSource = {tableData}
-        pagination = {false} // idk what this does, breaks up table if too big?
+        pagination = {false} 
         />
       </div>
     </div>
