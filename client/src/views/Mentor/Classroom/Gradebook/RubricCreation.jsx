@@ -1,5 +1,5 @@
 // This component, when clicked, presents a popup that allows the user to create a (template) rubric that will be applied
-// to the assignment the button exists under.
+// to the assignment the button exists under. -Brody
 
 import React, { useState } from 'react';
 import './RubricCreationPopup.css';
