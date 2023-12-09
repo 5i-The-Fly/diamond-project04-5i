@@ -20,13 +20,13 @@ const RubricCreationPopup = (assignmentKey) => {
   const handleAddCriteria = () => {
     setRubric([...rubric, { description: '', points: '' }]);
   };
-
+  // This is the handler for when the description is changed.
   const handleDescriptionChange = (index, value) => {
     const updatedRubric = [...rubric];
     updatedRubric[index].description = value;
     setRubric(updatedRubric);
   };
-
+  // This is the handler for when the points are changed.
   const handlePointsChange = (index, value) => {
     const updatedRubric = [...rubric];
     updatedRubric[index].points = value;
@@ -46,7 +46,7 @@ const RubricCreationPopup = (assignmentKey) => {
             value={criteria.description}
             onChange={(e) => handleDescriptionChange(index, e.target.value)}
           />
-
+          
           <label>Points:</label>
           <input
             type="text"
@@ -68,7 +68,7 @@ const RubricCreationPopup = (assignmentKey) => {
     updateTemplateRubric(rubric, assignmentKey)
     setPopupVisibility(false);
   };
-
+  // This is the button that will be rendered on the page.
   return (
     <div>
       <button onClick={handleButtonClick}>Open Rubric Creation Popup</button>
