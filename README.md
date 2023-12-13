@@ -17,8 +17,7 @@ Instructions for how to run the project locally
   4. Run `docker compose up` from `/`
   5. Run `yarn start` from `/client`
      
-How to update database and server connections
-  N/A
+How to update database and server connections: N/A
 
 Outstanding work
   - Properly integrating the scored rubric to reference template rubric.
